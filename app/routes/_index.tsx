@@ -5,7 +5,7 @@ import type { Route } from "./+types/_index";
 
 export const meta: Route.MetaFunction = () => {
   return [
-    { title: "Nahuel Luca - Software Developer" },
+    { title: "Loadertsx - Software Developer" },
     {
       name: "description",
       content:

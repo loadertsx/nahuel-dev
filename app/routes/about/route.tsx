@@ -3,8 +3,8 @@ import type { Route } from "../about/+types/route";
 
 export const meta: Route.MetaFunction = () => {
   return [
-    { title: "About - Nahuel Luca" },
-    { name: "description", content: "About Nahuel - Software Developer" },
+    { title: "About - Loadertsx" },
+    { name: "description", content: "About Loadertsx - Software Developer" },
   ];
 };
 
@@ -27,7 +27,7 @@ export default function About() {
         <div className="flex flex-col md:flex-row gap-8 items-start">
           <div className="flex-1 space-y-6 text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed">
             <p>
-              Hello! I'm Nahuel, a software developer passionate about building
+              Hello! I'm Loader, a software developer passionate about building
               products that people love to use. I believe in the craft of
               software development—writing code that's not just functional, but
               elegant and maintainable.
@@ -43,7 +43,7 @@ export default function About() {
           <img
             className="hidden md:block w-40 h-40 rounded-lg object-cover border border-[var(--color-border)] dark:border-[var(--color-dark-border)]"
             src={MePNG}
-            alt="Nahuel"
+            alt="Loader"
           />
         </div>
 

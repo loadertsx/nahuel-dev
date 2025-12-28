@@ -54,7 +54,7 @@ const projectsItems = [
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Projects - Nahuel Luca" },
+    { title: "Projects - Loadertsx" },
     { name: "description", content: "A selection of projects I've built" },
   ];
 };

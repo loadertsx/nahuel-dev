@@ -1,35 +1,43 @@
-import { Await, data, Link, useSearchParams } from "react-router";
-import { getNotes, getTopics } from "./queries.server";
+import { Await, data, Link, useSearchParams, useOutletContext } from "react-router";
+import { getNotes } from "./queries.server";
 import database from "~/db";
-import type { Route } from "../notes/+types/route";
+import type { Route } from "./+types/route";
 import { Tab, TabList, Tabs } from "~/components/ui/Tabs";
 import { Suspense } from "react";
 import ListSkeleton from "~/components/list-skeleton";
+
+type OutletContext = {
+  topics: Array<{ id: string; title: string }>;
+};
 
 export async function loader({ context, request }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const topic = url.searchParams.get("topic");
   const db = database(context.cloudflare.env.BLOG_DB);
-  const topics = await getTopics(db);
-
   const notes = await getNotes(db, topic || "");
 
-  return data({ topics, topic, notes });
+  return data({ topic, notes });
 }
 
-export const meta = ({ data }: Route.MetaArgs) => {
+export const meta: Route.MetaFunction = ({ matches }) => {
+  const parentData = matches.find((m) => m?.id === "routes/_layout.notes")?.data as
+    | { topics: Array<{ title: string }> }
+    | undefined;
+  const topics = parentData?.topics || [];
+
   return [
-    { title: "Notes - Nahuel Luca" },
+    { title: "Notes - Loadertsx" },
     {
       name: "description",
-      content: `${data?.topics.map((topic) => topic.title).join(", ")}`,
+      content: topics.map((topic) => topic.title).join(", "),
     },
   ];
 };
 
 export default function Notes({ loaderData }: Route.ComponentProps) {
-  const { topics, notes } = loaderData;
-  let [_, setSearchParams] = useSearchParams();
+  const { notes } = loaderData;
+  const { topics } = useOutletContext<OutletContext>();
+  const [_, setSearchParams] = useSearchParams();
 
   return (
     <section className="max-w-2xl mx-auto pb-16">

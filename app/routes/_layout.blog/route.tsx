@@ -17,7 +17,7 @@ function parseDateDDMMYY(dateStr: string): Date | null {
 
 export const meta = () => {
   return [
-    { title: "Blog - Nahuel Luca" },
+    { title: "Blog - Loadertsx" },
     { name: "description", content: "Thoughts on web development and building products" },
   ];
 };

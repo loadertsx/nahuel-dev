@@ -3,8 +3,8 @@ import type { Route } from "../contact/+types/route";
 
 export const meta: Route.MetaFunction = () => {
   return [
-    { title: "Contact - Nahuel Luca" },
-    { name: "description", content: "Get in touch with Nahuel" },
+    { title: "Contact - Loadertsx" },
+    { name: "description", content: "Get in touch with Loader" },
   ];
 };
 
