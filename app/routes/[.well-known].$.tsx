@@ -2,6 +2,7 @@ import type { Route } from "./+types/[.well-known].$";
 
 export function loader({ params }: Route.LoaderArgs) {
 	// Handle .well-known requests that don't have specific routes
+	// biome-ignore lint: react router thing
 	const splat = params["*"];
 
 	// For Chrome DevTools and other unknown .well-known requests, return 404

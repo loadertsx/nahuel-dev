@@ -1,5 +1,17 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
+	"css": {
+		"parser": {
+			"cssModules": true,
+			"tailwindDirectives": true
+		},
+		"linter": {
+			"enabled": false
+		},
+		"formatter": {
+			"enabled": false
+		}
+	},
 	"assist": {
 		"actions": {
 			"source": {
@@ -47,6 +59,21 @@
 			"includes": ["**/*.md"],
 			"formatter": {
 				"indentStyle": "tab"
+			}
+		},
+		{
+			"includes": ["**/*.css"],
+			"linter": {
+				"enabled": false
+			},
+			"formatter": {
+				"enabled": false
+			}
+		},
+		{
+			"includes": ["worker-configuration.d.ts"],
+			"linter": {
+				"enabled": false
 			}
 		}
 	]

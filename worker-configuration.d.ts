@@ -6067,6 +6067,7 @@ declare namespace Rpc {
 	export type Stub<T extends Stubable> = Provider<T> & StubBase<T>;
 	// This represents all the types that can be sent as-is over an RPC boundary
 	type BaseType =
+		// biome-ignore lint: because its cloudflare type
 		| void
 		| undefined
 		| null

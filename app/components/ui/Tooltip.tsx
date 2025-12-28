@@ -33,6 +33,7 @@ export function Tooltip({ children, ...props }: TooltipProps) {
 			)}
 		>
 			<OverlayArrow>
+				{/* biome-ignore lint/a11y/noSvgWithoutTitle: decorative arrow */}
 				<svg
 					width={8}
 					height={8}

@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import db from "~/db";
 export class Auth {
-	constructor(private readonly dbEnv: D1Database) {}
+	constructor(readonly _dbEnv: D1Database) {}
 
 	static async authManager(dbEnv: D1Database) {
 		return betterAuth({

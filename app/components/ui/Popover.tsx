@@ -40,7 +40,7 @@ export function Popover({
 		>
 			{showArrow && (
 				<OverlayArrow className="group">
-					{/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
+					{/* biome-ignore lint/a11y/noSvgWithoutTitle: decorative arrow */}
 					<svg
 						width={12}
 						height={12}

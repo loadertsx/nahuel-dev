@@ -1,10 +1,11 @@
+const SKELETON_IDS = ["sk-1", "sk-2", "sk-3", "sk-4", "sk-5", "sk-6"] as const;
+
 export default function ListSkeleton() {
-	const items = Array.from({ length: 6 }, (_, index) => index);
 	return (
 		<div className="space-y-1">
-			{items.map((_, index) => (
+			{SKELETON_IDS.map((id) => (
 				<div
-					key={index}
+					key={id}
 					className="flex items-center justify-between py-4 border-b border-[var(--color-border)] dark:border-[var(--color-dark-border)]"
 				>
 					<div

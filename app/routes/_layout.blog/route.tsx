@@ -11,7 +11,7 @@ function parseDateDDMMYY(dateStr: string): Date | null {
 	if (!day || !month || !year) return null;
 	const fullYear = year.length === 2 ? `20${year}` : year;
 	const date = new Date(Number(fullYear), Number(month) - 1, Number(day));
-	return isNaN(date.getTime()) ? null : date;
+	return Number.isNaN(date.getTime()) ? null : date;
 }
 
 export const meta = () => {

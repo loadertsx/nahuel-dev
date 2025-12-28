@@ -22,6 +22,7 @@ export default async function handleRequest(
 				// errors encountered during initial shell rendering since they'll
 				// reject and get logged in handleDocumentRequest.
 				if (shellRendered) {
+					// biome-ignore lint: because its cloudflare type
 					console.error(error);
 				}
 			},
