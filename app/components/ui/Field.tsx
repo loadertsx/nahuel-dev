@@ -1,6 +1,7 @@
 import {
 	composeRenderProps,
 	type FieldErrorProps,
+	Group,
 	type GroupProps,
 	type InputProps,
 	type LabelProps,
