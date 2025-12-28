@@ -103,3 +103,8 @@ Uses React Router v7 file-based routing with nested routes:
    - Always run `bun run typecheck` before commits
    - React Router generates route types automatically
    - Cloudflare types generated from `wrangler.toml`
+
+5. **Code Quality:**
+   - Use Biome as the linter and formatter for this project
+   - Run `bunx biome check --fix` to auto-fix linting and formatting issues
+   - Always format code with Biome before committing
