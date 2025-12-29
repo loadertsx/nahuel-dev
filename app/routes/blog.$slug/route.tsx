@@ -4,7 +4,6 @@ import { MarkdownView } from "~/components/markdown";
 import { markdownParser } from "~/utils/md.server";
 import type { Route } from "../blog.$slug/+types/route";
 import { getBlogPost } from "./queries.server";
-import "../../styles/prismjs.css";
 import database from "~/db";
 
 interface IBlog {

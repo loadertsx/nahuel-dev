@@ -5,7 +5,6 @@ import database from "~/db";
 import { markdownParser } from "~/utils/md.server";
 import type { Route } from "../_.notes.$slug/+types/route";
 import { getNote, getRelatedNotes } from "./queries.server";
-import "../../styles/prismjs.css";
 
 export async function loader({ params, context }: Route.LoaderArgs) {
 	const db = database(context.cloudflare.env.BLOG_DB);
