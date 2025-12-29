@@ -7,6 +7,15 @@ export class Auth {
 	static async authManager(dbEnv: D1Database) {
 		return betterAuth({
 			database: drizzleAdapter(db(dbEnv), { provider: "sqlite" }),
+			trustedOrigins: [
+				"http://localhost:5173",
+				"http://127.0.0.1:8788",
+				"https://loadertsx.com",
+			],
+			session: {
+				expiresIn: 60 * 60 * 24 * 7, // 7 days in seconds
+				updateAge: 60 * 60 * 24, // Refresh session daily
+			},
 			emailAndPassword: {
 				enabled: true,
 				disableSignUp: true,
@@ -31,11 +40,12 @@ export class Auth {
 	) {
 		const authManager = await Auth.authManager(dbEnv);
 		return authManager.api.signInEmail({
-			headers: request.headers,
+		  returnHeaders: true,
 			body: {
 				email,
 				password,
 			},
+			headers: request.headers,
 		});
 	}
 }

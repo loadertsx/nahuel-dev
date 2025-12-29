@@ -2,6 +2,13 @@ import { Label, TextArea } from "react-aria-components";
 import { useFetcher } from "react-router";
 import { Button } from "~/components/ui/Button";
 import { TextField } from "~/components/ui/TextField";
+import { requireAdmin } from "~/lib/auth/require-admin.server";
+import type { Route } from "./+types/route";
+
+export async function loader({ request, context }: Route.LoaderArgs) {
+	await requireAdmin(request, context.cloudflare.env.BLOG_DB);
+	return null;
+}
 
 export default function Blogpost() {
 	const fetcher = useFetcher();
