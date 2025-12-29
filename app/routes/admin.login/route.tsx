@@ -1,4 +1,4 @@
-import { data, redirect, Form, useActionData } from "react-router";
+import { data, Form, redirect, useActionData } from "react-router";
 import { Button } from "~/components/ui/Button";
 import { TextField } from "~/components/ui/TextField";
 import { Auth } from "~/lib/auth/auth.server";
@@ -35,7 +35,7 @@ export async function action({ request, context }: Route.ActionArgs) {
 		email,
 		password,
 	);
-	console.log(result)
+
 	if (!result || result.error) {
 		return data({ error: "Invalid credentials" }, { status: 401 });
 	}
