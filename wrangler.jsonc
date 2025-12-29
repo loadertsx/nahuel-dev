@@ -1,18 +1,18 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "loader",
-  "compatibility_date": "2025-04-04",
-  "main": "./workers/app.ts",
-  "compatibility_flags": ["nodejs_compat"],
-  "vars": {
-    "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare"
-  },
-  "d1_databases": [
-    {
-      "binding": "BLOG_DB",
-      "database_name": "blog-db",
-      "database_id": "545d95a0-c5d4-4324-a411-a896e7e2d1f8",
-      "migrations_dir": "drizzle"
-    }
-  ]
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "loader",
+	"compatibility_date": "2025-04-04",
+	"main": "./workers/app.ts",
+	"compatibility_flags": ["nodejs_compat"],
+	"vars": {
+		"VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare"
+	},
+	"d1_databases": [
+		{
+			"binding": "BLOG_DB",
+			"database_name": "blog-db",
+			"database_id": "545d95a0-c5d4-4324-a411-a896e7e2d1f8",
+			"migrations_dir": "drizzle"
+		}
+	]
 }
