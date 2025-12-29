@@ -32,12 +32,9 @@ export function headers(_: Route.HeadersArgs) {
 
 export const loader = async ({ request, context }: Route.LoaderArgs) => {
 	const authManager = await Auth.authManager(context.cloudflare.env.BLOG_DB);
-	const session = await authManager.api.getSession({
+	const _session = await authManager.api.getSession({
 		headers: request.headers,
 	});
-
-	console.log(session);
-	console.log(session?.user);
 
 	const db = database(context.cloudflare.env.BLOG_DB);
 	const results = getAllBlogs(db);
