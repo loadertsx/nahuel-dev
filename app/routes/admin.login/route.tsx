@@ -35,8 +35,7 @@ export async function action({ request, context }: Route.ActionArgs) {
 		email,
 		password,
 	);
-
-	if (!result || result.error) {
+	if (!result || !result.response.user) {
 		return data({ error: "Invalid credentials" }, { status: 401 });
 	}
 
