@@ -9,6 +9,7 @@ export const notes = sqliteTable("notes", {
 		.references(() => topics.id, { onDelete: "cascade" }),
 	title: text("title").notNull(),
 	content: text("content"),
+	status: text("status").notNull().default("draft"),
 	createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
 	updatedAt: text("updated_at").notNull().default(sql`(current_timestamp)`),
 });

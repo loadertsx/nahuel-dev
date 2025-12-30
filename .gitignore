@@ -16,3 +16,4 @@ wrangler.toml
 .llm-context/
 drizzle.config.local.ts
 bun.lockb
+*.tsbuildinfo
