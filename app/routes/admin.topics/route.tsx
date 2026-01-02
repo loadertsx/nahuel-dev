@@ -89,7 +89,7 @@ export default function AdminTopics({ loaderData }: Route.ComponentProps) {
 					</Link>
 				</div>
 			) : (
-				<div className="rounded-2xl border border-[var(--color-border)] dark:border-[var(--color-dark-border)] overflow-hidden">
+				<div className="rounded-2xl border border-[var(--color-border)] dark:border-[var(--color-dark-border)] overflow-x-auto">
 					<table className="w-full">
 						<thead>
 							<tr className="bg-[var(--color-surface)] dark:bg-[var(--color-dark-surface)] border-b border-[var(--color-border)] dark:border-[var(--color-dark-border)]">
