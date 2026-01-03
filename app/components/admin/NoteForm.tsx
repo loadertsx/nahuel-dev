@@ -7,6 +7,7 @@ import { Select, SelectItem } from "~/components/ui/Select";
 import { TextField } from "~/components/ui/TextField";
 import { useIndexedDBSync } from "~/hooks/useIndexedDBSync";
 import type { ServerNoteWithRelations } from "~/lib/indexeddb.client";
+import { RelatedNotesSelector } from "./RelatedNotesSelector";
 
 export interface NoteFormProps {
 	mode: "create" | "edit";
@@ -21,6 +22,7 @@ export function NoteForm({
 	noteId,
 	initialData,
 	topics,
+	allNotes,
 }: NoteFormProps) {
 	const navigate = useNavigate();
 
@@ -89,9 +91,7 @@ export function NoteForm({
 					<Select
 						label="Topic"
 						selectedKey={draft?.topicId || null}
-						onSelectionChange={(key) =>
-							updateDraft({ topicId: key as string })
-						}
+						onSelectionChange={(key) => updateDraft({ topicId: key as string })}
 						isRequired
 					>
 						{topics.map((topic) => (
@@ -119,6 +119,13 @@ export function NoteForm({
 					onChange={(value) => updateDraft({ content: value })}
 					placeholder="Write your note content in markdown..."
 					minHeight="400px"
+				/>
+
+				<RelatedNotesSelector
+					selectedIds={draft?.relatedNoteIds ?? []}
+					availableNotes={allNotes}
+					currentNoteId={mode === "edit" ? noteId : undefined}
+					onChange={(ids) => updateDraft({ relatedNoteIds: ids })}
 				/>
 			</div>
 
