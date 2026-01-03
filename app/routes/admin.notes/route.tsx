@@ -1,6 +1,7 @@
 import { Filter, Pencil, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { data, Link, useFetcher } from "react-router";
+import { deleteDraft } from "~/lib/indexeddb.client";
 import { DeleteConfirmationModal } from "~/components/admin/DeleteConfirmationModal";
 import { Button } from "~/components/ui/Button";
 import database from "~/db";
@@ -67,8 +68,17 @@ export default function AdminNotes({ loaderData }: Route.ComponentProps) {
 		isOpen: boolean;
 		note: (typeof notes)[number] | null;
 	}>({ isOpen: false, note: null });
+	const [deletingNoteId, setDeletingNoteId] = useState<string | null>(null);
 
 	const isDeleting = fetcher.state !== "idle";
+
+	// Cleanup IndexedDB draft after successful delete
+	useEffect(() => {
+		if (fetcher.state === "idle" && fetcher.data?.success && deletingNoteId) {
+			deleteDraft(deletingNoteId);
+			setDeletingNoteId(null);
+		}
+	}, [fetcher.state, fetcher.data, deletingNoteId]);
 
 	const filteredNotes =
 		selectedTopicId === "all"
@@ -77,6 +87,7 @@ export default function AdminNotes({ loaderData }: Route.ComponentProps) {
 
 	const handleDelete = () => {
 		if (!deleteModal.note) return;
+		setDeletingNoteId(deleteModal.note.id);
 		fetcher.submit(
 			{ intent: "delete", noteId: deleteModal.note.id },
 			{ method: "post" },

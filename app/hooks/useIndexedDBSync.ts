@@ -1,21 +1,21 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFetcher } from "react-router";
 import {
-	type NoteDraft,
-	type ServerNoteWithRelations,
 	deleteDraft,
 	getDraft,
 	isClient,
+	type NoteDraft,
+	type ServerNoteWithRelations,
 	saveDraft,
 } from "~/lib/indexeddb.client";
 import {
-	type SyncResponse,
-	type SyncResult,
-	type SyncStatus,
 	createEmptyDraft,
 	prepareSyncFormData,
 	processSyncResponse,
 	resolveConflict,
+	type SyncResponse,
+	type SyncResult,
+	type SyncStatus,
 	serverNoteToLocalDraft,
 } from "~/lib/sync-engine.client";
 import { useSyncStatus } from "./useSyncStatus";
@@ -122,7 +122,7 @@ export function useIndexedDBSync(
 		}
 
 		initializeDraft();
-	}, [noteId, stableNoteId, initialData]);
+	}, [stableNoteId, initialData]);
 
 	// Update draft function - saves to IndexedDB immediately
 	const updateDraft = useCallback(

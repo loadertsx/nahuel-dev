@@ -129,16 +129,18 @@ export function processSyncResponse(
 	}
 
 	if (response.success && response.note) {
+		const serverTimestamp = new Date(response.note.updatedAt).getTime();
 		return {
 			status: localDraft.isNew ? "created" : "synced",
 			data: {
 				...localDraft,
 				id: response.note.id,
 				syncStatus: "synced",
-				serverUpdatedAt: new Date(response.note.updatedAt).getTime(),
+				updatedAt: serverTimestamp,
+				serverUpdatedAt: serverTimestamp,
 				isNew: false,
 			},
-			serverUpdatedAt: new Date(response.note.updatedAt).getTime(),
+			serverUpdatedAt: serverTimestamp,
 		};
 	}
 
