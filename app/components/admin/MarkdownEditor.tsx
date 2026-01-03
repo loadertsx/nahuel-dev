@@ -1,7 +1,7 @@
 import { Eye, Pencil } from "lucide-react";
 import { useState } from "react";
 import { MarkdownView } from "~/components/markdown";
-import { markdownParser } from "~/utils/md.server";
+import { markdownParser } from "~/utils/md.client";
 
 export interface MarkdownEditorProps {
 	value: string;
