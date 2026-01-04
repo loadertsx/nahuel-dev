@@ -27,6 +27,17 @@ export interface SyncResponse {
 	error?: string;
 }
 
+const TZ_SUFFIX_REGEX = /(?:Z|[+-]\d{2}:\d{2})$/;
+
+function parseServerTimestamp(serverTimestamp: string): number {
+	if (!serverTimestamp) return Number.NaN;
+	const trimmed = serverTimestamp.trim();
+	if (trimmed.includes("T") || TZ_SUFFIX_REGEX.test(trimmed)) {
+		return new Date(trimmed).getTime();
+	}
+	return new Date(`${trimmed.replace(" ", "T")}Z`).getTime();
+}
+
 /**
  * Get a single note with topic info
  */
@@ -165,7 +176,7 @@ export async function syncNote(
 		};
 	}
 
-	const serverUpdatedAt = new Date(serverNote.updatedAt).getTime();
+	const serverUpdatedAt = parseServerTimestamp(serverNote.updatedAt);
 
 	// LWW: Compare timestamps
 	if (serverUpdatedAt > clientUpdatedAt) {

@@ -10,9 +10,9 @@ import {
 } from "~/lib/indexeddb.client";
 import {
 	createEmptyDraft,
+	parseServerTimestamp,
 	prepareSyncFormData,
 	processSyncResponse,
-	resolveConflict,
 	type SyncResponse,
 	type SyncResult,
 	type SyncStatus,
@@ -63,6 +63,8 @@ export function useIndexedDBSync(
 
 	const syncIntervalRef = useRef<NodeJS.Timeout | null>(null);
 	const isSyncingRef = useRef(false);
+	const pendingInitRef = useRef(false);
+	const lastInitSignatureRef = useRef<string | null>(null);
 
 	// Generate stable ID for new notes (regenerates when noteId prop changes)
 	const stableNoteId = useMemo(() => {
@@ -71,12 +73,26 @@ export function useIndexedDBSync(
 
 	// Initialize draft on mount or when noteId changes
 	useEffect(() => {
+		const initSignature = `${stableNoteId}|${initialData?.updatedAt ?? "none"}`;
+
+		// Don't re-initialize if sync is in progress
+		if (isSyncingRef.current) {
+			pendingInitRef.current = true;
+			return;
+		}
+
+		if (!pendingInitRef.current && lastInitSignatureRef.current === initSignature) {
+			return;
+		}
+
+		pendingInitRef.current = false;
+		lastInitSignatureRef.current = initSignature;
+
 		// Reset state when noteId changes
 		setIsLoading(true);
 		setDraft(null);
 		setError(null);
 		setSyncStatus("synced");
-		isSyncingRef.current = false;
 
 		async function initializeDraft() {
 			if (!isClient()) {
@@ -84,23 +100,36 @@ export function useIndexedDBSync(
 				return;
 			}
 
+			// Double-check sync status (could have changed during async operations)
+			if (isSyncingRef.current) {
+				pendingInitRef.current = true;
+				return;
+			}
+
 			const id = stableNoteId;
 			const localDraft = await getDraft(id);
 
 			if (localDraft && initialData) {
-				// Both local and server data exist - apply LWW
-				const winner = resolveConflict(
-					localDraft.updatedAt,
-					initialData.updatedAt,
-				);
+				const serverTimestamp = parseServerTimestamp(initialData.updatedAt);
 
-				if (winner === "server") {
+				// Local draft has pending edits (syncStatus === "pending")
+				// or local draft was edited after the last successful sync
+				if (
+					localDraft.syncStatus === "pending" ||
+					(localDraft.serverUpdatedAt !== null &&
+						localDraft.updatedAt > localDraft.serverUpdatedAt)
+				) {
+					// Local has unsynced changes - keep local
+					setDraft(localDraft);
+					setSyncStatus("pending");
+				} else if (localDraft.serverUpdatedAt !== serverTimestamp) {
+					// Server has newer data - update local
 					const serverDraft = serverNoteToLocalDraft(initialData);
 					await saveDraft(serverDraft);
 					setDraft(serverDraft);
 				} else {
+					// Timestamps equal, no changes - keep local
 					setDraft(localDraft);
-					setSyncStatus("pending");
 				}
 			} else if (localDraft) {
 				// Only local data exists
@@ -122,7 +151,7 @@ export function useIndexedDBSync(
 		}
 
 		initializeDraft();
-	}, [stableNoteId, initialData]);
+	}, [stableNoteId, initialData, syncStatus]);
 
 	// Update draft function - saves to IndexedDB immediately
 	const updateDraft = useCallback(
@@ -189,55 +218,64 @@ export function useIndexedDBSync(
 
 	// Handle fetcher response
 	useEffect(() => {
-		if (fetcher.state === "idle" && fetcher.data && isSyncingRef.current) {
-			isSyncingRef.current = false;
-			const response = fetcher.data;
+		async function handleResponse() {
+			if (fetcher.state === "idle" && fetcher.data && isSyncingRef.current) {
+				const response = fetcher.data;
 
-			if (!draft) return;
-
-			const result = processSyncResponse(draft, response);
-
-			if (result.status === "error") {
-				setError(result.error ?? "Sync failed");
-				setSyncStatus("error");
-			} else if (result.status === "conflict-resolved" && result.data) {
-				// Server won - update local draft
-				setDraft(result.data);
-				saveDraft(result.data);
-				setSyncStatus("synced");
-				setLastSyncedAt(new Date());
-				setError(null);
-			} else if (
-				(result.status === "synced" || result.status === "created") &&
-				result.data
-			) {
-				// Sync successful
-				const newDraft = result.data;
-
-				// If was a new note, clean up old draft
-				if (draft.isNew && newDraft.id !== draft.id) {
-					deleteDraft(draft.id);
+				if (!draft) {
+					isSyncingRef.current = false;
+					return;
 				}
 
-				setDraft(newDraft);
-				saveDraft(newDraft);
-				setSyncStatus("synced");
-				setLastSyncedAt(new Date());
-				setError(null);
+				const result = processSyncResponse(draft, response);
+
+				if (result.status === "error") {
+					setError(result.error ?? "Sync failed");
+					setSyncStatus("error");
+					isSyncingRef.current = false;
+				} else if (result.status === "conflict-resolved" && result.data) {
+					// Server won - update local draft
+					await saveDraft(result.data);
+					setDraft(result.data);
+					setSyncStatus("synced");
+					setLastSyncedAt(new Date());
+					setError(null);
+					isSyncingRef.current = false;
+				} else if (
+					(result.status === "synced" || result.status === "created") &&
+					result.data
+				) {
+					// Sync successful
+					const newDraft = result.data;
+
+					// If was a new note, clean up old draft
+					if (draft.isNew && newDraft.id !== draft.id) {
+						await deleteDraft(draft.id);
+					}
+
+					await saveDraft(newDraft);
+					setDraft(newDraft);
+					setSyncStatus("synced");
+					setLastSyncedAt(new Date());
+					setError(null);
+					isSyncingRef.current = false;
+				}
+			}
+
+			// Handle fetch error
+			if (
+				fetcher.state === "idle" &&
+				!fetcher.data &&
+				isSyncingRef.current &&
+				syncStatus === "syncing"
+			) {
+				isSyncingRef.current = false;
+				setError("Network error - changes saved locally");
+				setSyncStatus("error");
 			}
 		}
 
-		// Handle fetch error
-		if (
-			fetcher.state === "idle" &&
-			!fetcher.data &&
-			isSyncingRef.current &&
-			syncStatus === "syncing"
-		) {
-			isSyncingRef.current = false;
-			setError("Network error - changes saved locally");
-			setSyncStatus("error");
-		}
+		handleResponse();
 	}, [fetcher.state, fetcher.data, draft, syncStatus]);
 
 	// Handle online/offline transitions

@@ -4,13 +4,13 @@ import database from "~/db";
 import { requireAdmin } from "~/lib/auth/require-admin.server";
 import { getTopics } from "~/lib/queries/topics.server";
 import { noteSchema } from "~/lib/schemas/note";
-import type { Route } from "./+types/route";
 import {
 	getAllNotesForSelection,
 	getNote,
 	getRelatedNoteIds,
 	syncNote,
 } from "../admin.notes.$noteId/queries.server";
+import type { Route } from "./+types/route";
 
 export async function loader({ request, context, params }: Route.LoaderArgs) {
 	await requireAdmin(request, context.cloudflare.env.BLOG_DB);

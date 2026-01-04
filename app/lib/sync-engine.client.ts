@@ -31,6 +31,17 @@ export interface SyncResponse {
 	error?: string;
 }
 
+const TZ_SUFFIX_REGEX = /(?:Z|[+-]\d{2}:\d{2})$/;
+
+export function parseServerTimestamp(serverTimestamp: string): number {
+	if (!serverTimestamp) return Number.NaN;
+	const trimmed = serverTimestamp.trim();
+	if (trimmed.includes("T") || TZ_SUFFIX_REGEX.test(trimmed)) {
+		return new Date(trimmed).getTime();
+	}
+	return new Date(`${trimmed.replace(" ", "T")}Z`).getTime();
+}
+
 /**
  * Compare timestamps and determine LWW winner
  * @param localTimestamp - Local draft updatedAt (Unix ms)
@@ -41,7 +52,7 @@ export function resolveConflict(
 	localTimestamp: number,
 	serverTimestamp: string,
 ): ConflictWinner {
-	const serverMs = new Date(serverTimestamp).getTime();
+	const serverMs = parseServerTimestamp(serverTimestamp);
 	return localTimestamp > serverMs ? "local" : "server";
 }
 
@@ -53,6 +64,7 @@ export function serverNoteToLocalDraft(
 	serverNote: ServerNoteWithRelations,
 	options?: { syncStatus?: "synced" | "pending" },
 ): NoteDraft {
+	const serverMs = parseServerTimestamp(serverNote.updatedAt);
 	return {
 		id: serverNote.id,
 		title: serverNote.title,
@@ -60,9 +72,9 @@ export function serverNoteToLocalDraft(
 		topicId: serverNote.topicId,
 		status: serverNote.status as "draft" | "published",
 		relatedNoteIds: serverNote.relatedNoteIds ?? [],
-		updatedAt: new Date(serverNote.updatedAt).getTime(),
+		updatedAt: serverMs,
 		syncStatus: options?.syncStatus ?? "synced",
-		serverUpdatedAt: new Date(serverNote.updatedAt).getTime(),
+		serverUpdatedAt: serverMs,
 		isNew: false,
 	};
 }
@@ -129,7 +141,7 @@ export function processSyncResponse(
 	}
 
 	if (response.success && response.note) {
-		const serverTimestamp = new Date(response.note.updatedAt).getTime();
+		const serverTimestamp = parseServerTimestamp(response.note.updatedAt);
 		return {
 			status: localDraft.isNew ? "created" : "synced",
 			data: {
