@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 import database from "~/db";
-import { getTopics } from "./_layout.notes._index/queries.server";
+import { getTopics } from "~/lib/queries/topics.server";
 import type { Route } from "./+types/_layout.notes";
 
 export async function loader({ context }: Route.LoaderArgs) {

@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { Database } from "~/db";
 import { noteRelations } from "~/db/schemas/note-relations";
 import { notes } from "~/db/schemas/notes";
@@ -10,8 +10,8 @@ export async function getNote(db: Database, noteId: string) {
 			content: notes.content,
 		})
 		.from(notes)
-		.where(eq(notes.id, noteId))
-		.all();
+		.where(and(eq(notes.id, noteId), eq(notes.status, "published")))
+		.get();
 }
 
 export async function getRelatedNotes(db: Database, noteId: string) {

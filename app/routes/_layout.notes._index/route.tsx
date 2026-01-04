@@ -13,7 +13,7 @@ import type { Route } from "./+types/route";
 import { getNotes } from "./queries.server";
 
 type OutletContext = {
-	topics: Array<{ id: string; title: string }>;
+	topics: Array<{ id: string; name: string }>;
 };
 
 export async function loader({ context, request }: Route.LoaderArgs) {
@@ -27,14 +27,14 @@ export async function loader({ context, request }: Route.LoaderArgs) {
 
 export const meta: Route.MetaFunction = ({ matches }) => {
 	const parentData = matches.find((m) => m?.id === "routes/_layout.notes")
-		?.data as { topics: Array<{ title: string }> } | undefined;
+		?.data as { topics: Array<{ name: string }> } | undefined;
 	const topics = parentData?.topics || [];
 
 	return [
 		{ title: "Notes - Loadertsx" },
 		{
 			name: "description",
-			content: topics.map((topic) => topic.title).join(", "),
+			content: topics.map((topic) => topic.name).join(", "),
 		},
 	];
 };
@@ -71,7 +71,7 @@ export default function Notes({ loaderData }: Route.ComponentProps) {
 							id={topic.id}
 							className="px-4 py-2 text-sm font-medium rounded-full border border-[var(--color-border)] dark:border-[var(--color-dark-border)] cursor-pointer transition-all duration-200 hover:border-[var(--color-border-strong)] dark:hover:border-[var(--color-dark-border-strong)] data-[selected]:bg-[var(--color-text)] dark:data-[selected]:bg-[var(--color-dark-text)] data-[selected]:text-[var(--color-bg)] dark:data-[selected]:text-[var(--color-dark-bg)] data-[selected]:border-transparent"
 						>
-							{topic.title}
+							{topic.name}
 						</Tab>
 					))}
 				</TabList>

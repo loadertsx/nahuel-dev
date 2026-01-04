@@ -13,8 +13,8 @@ export async function loader({ params, context }: Route.LoaderArgs) {
 		throw new Response("Not Found", { status: 404 });
 	}
 
-	const content = note[0].content && markdownParser(note[0].content);
-	const title = note[0].title;
+	const content = note.content && markdownParser(note.content);
+	const title = note.title;
 	const relatedNotes = await getRelatedNotes(db, params.slug);
 
 	return data({ note, relatedNotes, content, title });

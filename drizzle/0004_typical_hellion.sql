@@ -1,0 +1,1 @@
+ALTER TABLE `notes` ADD `status` text DEFAULT 'draft' NOT NULL;
