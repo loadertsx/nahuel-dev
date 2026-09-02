@@ -7,7 +7,7 @@ const projectsItems = [
 		content:
 			"Organize your ideas, share your knowledge, and grow your understanding with Treefy.",
 		deployLink: "https://treefy.pages.dev/",
-		codeLink: "https://github.com/Nahuelluca20/treefy",
+		codeLink: "https://github.com/loadertsx/treefy",
 		tags: ["Remix", "Cloudflare", "KV"],
 	},
 	{
@@ -15,7 +15,7 @@ const projectsItems = [
 		content:
 			"A RAG system using an LLM that responds according to the user's questions.",
 		deployLink: "https://loadertsx.com/blog/how-create-rag-system",
-		codeLink: "https://github.com/Nahuelluca20/ollama-techstacks-api",
+		codeLink: "https://github.com/loadertsx/ollama-techstacks-api",
 		tags: ["Python", "FastAPI", "LLMs", "Ollama"],
 	},
 	{
@@ -23,7 +23,7 @@ const projectsItems = [
 		content:
 			"Trello clone using remix, you can create boards and tasks like Trello.",
 		deployLink: "https://trello-clone-zeta-wheat.vercel.app/",
-		codeLink: "https://github.com/Nahuelluca20/trello-clone",
+		codeLink: "https://github.com/loadertsx/trello-clone",
 		tags: ["Remix", "Prisma", "Supabase"],
 	},
 	{
@@ -31,7 +31,7 @@ const projectsItems = [
 		content:
 			"WhosIn is an app to create events and have your friends confirm their presence.",
 		deployLink: "https://whos-in-sage.vercel.app/",
-		codeLink: "https://github.com/Nahuelluca20/WhosIn-",
+		codeLink: "https://github.com/loadertsx/WhosIn-",
 		tags: ["Next.js", "Prisma", "Clerk"],
 	},
 	{
@@ -39,7 +39,7 @@ const projectsItems = [
 		content:
 			"Hacker News mini clone, you can see the latest stories and access comments.",
 		deployLink: "https://hackernews-remix-clone.netlify.app/",
-		codeLink: "https://github.com/Nahuelluca20/hacker-news-remix-clone",
+		codeLink: "https://github.com/loadertsx/hacker-news-remix-clone",
 		tags: ["Remix", "TailwindCSS", "API"],
 	},
 	{
@@ -47,7 +47,7 @@ const projectsItems = [
 		content:
 			"An app made with react that consumes the flag-api API to display the countries and their data.",
 		deployLink: "https://react-flag-api.netlify.app/",
-		codeLink: "https://github.com/Nahuelluca20/react-flag-API",
+		codeLink: "https://github.com/loadertsx/react-flag-API",
 		tags: ["React", "React Router", "API"],
 	},
 ];

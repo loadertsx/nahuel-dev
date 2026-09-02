@@ -129,4 +129,4 @@ Cool! Now our data is cached for 60 seconds. If we click on the button again, we
 
 ## The end
 
-Thank you very much for reading this article! You can see the code [here](https://github.com/Nahuelluca20/remix-PrefetchPageLinks-demo) and the live demo [here](https://remix-prefetch-page-links-demo.vercel.app/)
+Thank you very much for reading this article! You can see the code [here](https://github.com/loadertsx/remix-PrefetchPageLinks-demo) and the live demo [here](https://remix-prefetch-page-links-demo.vercel.app/)
