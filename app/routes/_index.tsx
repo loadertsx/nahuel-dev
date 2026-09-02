@@ -64,7 +64,7 @@ export default function Index() {
 				</span>
 				<div className="flex items-center gap-4">
 					<a
-						href="https://github.com/Nahuelluca20"
+						href="https://github.com/loadertsx"
 						target="_blank"
 						rel="noopener noreferrer"
 						className="p-2 text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-dark-text)] transition-colors"

@@ -19,8 +19,8 @@ const contactLinks = [
 	{
 		icon: Github,
 		label: "GitHub",
-		value: "@Nahuelluca20",
-		href: "https://github.com/Nahuelluca20",
+		value: "@loadertsx",
+		href: "https://github.com/loadertsx",
 		description: "See my open source work",
 	},
 	{
