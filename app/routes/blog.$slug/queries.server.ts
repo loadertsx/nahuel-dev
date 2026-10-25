@@ -8,6 +8,7 @@ export async function getBlogPost(slug: string, db: Database) {
 			tags: post.tags,
 			content: post.content,
 			title: post.title,
+			date: post.date,
 		})
 		.from(post)
 		.where(eq(post.id, String(slug)))

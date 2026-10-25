@@ -6,29 +6,52 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-serif: "Newsreader", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  /* Alchemical manuscript: engraved ink on paper, one red — the Stone. */
+  --font-sans: "EB Garamond", ui-serif, Georgia, "Times New Roman", serif;
+  --font-serif: "Cormorant Garamond", ui-serif, Georgia, "Times New Roman", serif;
+  --font-caps: "Cinzel", "Cormorant Garamond", ui-serif, serif;
+  --font-script: "Pinyon Script", "Cormorant Garamond", cursive;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-symbols: "Noto Sans Symbols", "Segoe UI Symbol", ui-serif, serif;
 
   /* Light mode colors */
-  --color-bg: #FAF8F5;
-  --color-surface: #F5F2ED;
-  --color-text: #2D2A26;
-  --color-text-secondary: #6B6560;
-  --color-accent: #B8624A;
-  --color-accent-hover: #A35540;
-  --color-border: #E8E4DD;
-  --color-border-strong: #D4CFC6;
+  --color-bg: #FFFFFF;
+  --color-surface: #F5F5F4;
+  --color-text: #0A0A0A;
+  --color-text-secondary: #5E5E5E;
+  --color-accent: #B5121B;
+  --color-accent-hover: #8F0E15;
+  --color-border: #E7E7E7;
+  --color-border-strong: #CFCFCF;
 
-  /* Dark mode colors */
-  --color-dark-bg: #1A1918;
-  --color-dark-surface: #242322;
-  --color-dark-text: #F5F2ED;
-  --color-dark-text-secondary: #9C9890;
-  --color-dark-accent: #D4A574;
-  --color-dark-accent-hover: #E0B88A;
-  --color-dark-border: #3A3835;
-  --color-dark-border-strong: #4A4744;
+  /* Dark mode colors: the exact negative, the Stone stays red */
+  --color-dark-bg: #0A0A0A;
+  --color-dark-surface: #161616;
+  --color-dark-text: #FAFAFA;
+  --color-dark-text-secondary: #A3A3A3;
+  --color-dark-accent: #E0262F;
+  --color-dark-accent-hover: #F04049;
+  --color-dark-border: #262626;
+  --color-dark-border-strong: #3D3D3D;
+}
+
+/* Semantic aliases that flip with the theme, so components need one class. */
+:root {
+  --ink: var(--color-text);
+  --paper: var(--color-bg);
+  --muted: var(--color-text-secondary);
+  --rule: var(--color-border);
+  --rule-strong: var(--color-border-strong);
+  --stone: var(--color-accent);
+}
+
+.dark {
+  --ink: var(--color-dark-text);
+  --paper: var(--color-dark-bg);
+  --muted: var(--color-dark-text-secondary);
+  --rule: var(--color-dark-border);
+  --rule-strong: var(--color-dark-border-strong);
+  --stone: var(--color-dark-accent);
 }
 
 html {
@@ -56,6 +79,7 @@ body {
   @apply transition-colors duration-300 antialiased;
   background-color: var(--color-bg);
   color: var(--color-text);
+  font-size: 1.125rem;
 }
 
 .dark body {
@@ -81,15 +105,10 @@ body::before {
   opacity: 0.03;
 }
 
-/* Selection styling */
+/* Selection styling: inverted ink */
 ::selection {
-  background-color: var(--color-accent);
-  color: white;
-}
-
-.dark ::selection {
-  background-color: var(--color-dark-accent);
-  color: var(--color-dark-bg);
+  background-color: var(--ink);
+  color: var(--paper);
 }
 
 /* Smooth link underlines */
@@ -116,25 +135,27 @@ body::before {
   transform-origin: left;
 }
 
-/* Typography refinements */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-serif);
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+/* Typography refinements (in the base layer so utilities can override) */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
 }
 
 /* Prose customization for blog content */
 .prose {
   --tw-prose-body: var(--color-text);
   --tw-prose-headings: var(--color-text);
-  --tw-prose-links: var(--color-accent);
+  --tw-prose-links: var(--color-text);
   --tw-prose-bold: var(--color-text);
   --tw-prose-counters: var(--color-text-secondary);
   --tw-prose-bullets: var(--color-text-secondary);
   --tw-prose-hr: var(--color-border);
   --tw-prose-quotes: var(--color-text-secondary);
-  --tw-prose-quote-borders: var(--color-accent);
+  --tw-prose-quote-borders: var(--color-text);
   --tw-prose-captions: var(--color-text-secondary);
   --tw-prose-code: var(--color-text);
   --tw-prose-pre-code: var(--color-dark-text);
@@ -146,13 +167,13 @@ h1, h2, h3, h4, h5, h6 {
 .dark .prose {
   --tw-prose-body: var(--color-dark-text);
   --tw-prose-headings: var(--color-dark-text);
-  --tw-prose-links: var(--color-dark-accent);
+  --tw-prose-links: var(--color-dark-text);
   --tw-prose-bold: var(--color-dark-text);
   --tw-prose-counters: var(--color-dark-text-secondary);
   --tw-prose-bullets: var(--color-dark-text-secondary);
   --tw-prose-hr: var(--color-dark-border);
   --tw-prose-quotes: var(--color-dark-text-secondary);
-  --tw-prose-quote-borders: var(--color-dark-accent);
+  --tw-prose-quote-borders: var(--color-dark-text);
   --tw-prose-captions: var(--color-dark-text-secondary);
   --tw-prose-code: var(--color-dark-text);
   --tw-prose-pre-code: var(--color-dark-text);
@@ -163,12 +184,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Focus ring customization */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-.dark :focus-visible {
-  outline-color: var(--color-dark-accent);
+  outline: 1px solid var(--ink);
+  outline-offset: 3px;
 }
 
 /* Scrollbar styling */
@@ -245,19 +262,21 @@ article > h6 {
 
 article > a,
 article > p > a {
-  @apply text-[var(--color-accent)] dark:text-[var(--color-dark-accent)];
+  @apply text-[var(--ink)] underline decoration-1 underline-offset-4;
 }
 
 strong {
   @apply text-[var(--color-text)] dark:text-[var(--color-dark-text)] font-semibold;
 }
 
-blockquote {
-  @apply text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] border-l-2 border-[var(--color-accent)] dark:border-[var(--color-dark-accent)] pl-4 italic;
+@layer base {
+  blockquote {
+    @apply text-[var(--muted)] border-l border-[var(--ink)] pl-5 italic;
+  }
 }
 
 .prose :where(a):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-  @apply text-[var(--color-accent)] dark:text-[var(--color-dark-accent)];
+  @apply text-[var(--ink)] underline decoration-1 underline-offset-4;
 }
 
 /* Code blocks */
@@ -265,7 +284,7 @@ code[class*="language-"],
 pre[class*="language-"] {
   @apply text-[var(--color-text)] dark:text-[var(--color-dark-text)];
   background: 0 0;
-  font-family: "SF Mono", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  font-family: var(--font-mono);
   font-size: 0.9em;
   text-align: left;
   white-space: pre;
@@ -287,7 +306,7 @@ code[class*="language-"]::-moz-selection,
 pre[class*="language-"] ::-moz-selection,
 pre[class*="language-"]::-moz-selection {
   text-shadow: none;
-  @apply bg-[var(--color-accent)]/20 dark:bg-[var(--color-dark-accent)]/20;
+  @apply bg-[var(--rule-strong)];
 }
 
 code[class*="language-"] ::selection,
@@ -295,7 +314,7 @@ code[class*="language-"]::selection,
 pre[class*="language-"] ::selection,
 pre[class*="language-"]::selection {
   text-shadow: none;
-  @apply bg-[var(--color-accent)]/20 dark:bg-[var(--color-dark-accent)]/20;
+  @apply bg-[var(--rule-strong)];
 }
 
 @media print {
@@ -309,12 +328,12 @@ pre[class*="language-"] {
   padding: 1.25em;
   margin: 1em 0;
   overflow: auto;
-  border-radius: 0.5rem;
+  border-radius: 0;
 }
 
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
-  @apply bg-[var(--color-surface)] dark:bg-[#0D0D0C] border border-[var(--color-border)] dark:border-[var(--color-dark-border)];
+  @apply bg-[var(--color-surface)] dark:bg-[var(--color-dark-surface)] border border-[var(--ink)];
 }
 
 :not(pre) > code[class*="language-"] {
@@ -323,16 +342,16 @@ pre[class*="language-"] {
   white-space: normal;
 }
 
-/* Syntax highlighting - warm palette */
+/* Syntax highlighting - engraved monochrome, the Stone for literals */
 .token.cdata,
 .token.comment,
 .token.doctype,
 .token.prolog {
-  @apply text-[#8B8577] dark:text-[#6B6560];
+  @apply text-[var(--muted)] italic;
 }
 
 .token.punctuation {
-  @apply text-[#6B6560] dark:text-[#9C9890];
+  @apply text-[var(--muted)];
 }
 
 .token.namespace {
@@ -346,7 +365,7 @@ pre[class*="language-"] {
 .token.property,
 .token.symbol,
 .token.tag {
-  @apply text-[#B8624A] dark:text-[#D4A574];
+  @apply text-[var(--stone)];
 }
 
 .token.attr-name,
@@ -355,7 +374,7 @@ pre[class*="language-"] {
 .token.inserted,
 .token.selector,
 .token.string {
-  @apply text-[#5A7A4A] dark:text-[#8FB573];
+  @apply text-[var(--ink)] italic;
 }
 
 .language-css .token.string,
@@ -363,24 +382,24 @@ pre[class*="language-"] {
 .token.entity,
 .token.operator,
 .token.url {
-  @apply text-[#9A7B4F] dark:text-[#D4A574] bg-transparent;
+  @apply text-[var(--muted)] bg-transparent;
 }
 
 .token.atrule,
 .token.attr-value,
 .token.keyword {
-  @apply text-[#6B7A8F] dark:text-[#88A0C4];
+  @apply text-[var(--ink)] font-semibold;
 }
 
 .token.class-name,
 .token.function {
-  @apply text-[#A35540] dark:text-[#E8B08C];
+  @apply text-[var(--ink)] underline decoration-[var(--rule-strong)] underline-offset-2;
 }
 
 .token.important,
 .token.regex,
 .token.variable {
-  @apply text-[#C97D4D] dark:text-[#E8B08C];
+  @apply text-[var(--stone)];
 }
 
 .token.bold,
@@ -394,4 +413,333 @@ pre[class*="language-"] {
 
 .token.entity {
   cursor: help;
+}
+
+/* ===========================================
+   Alchemical manuscript
+   =========================================== */
+
+/* The engraved plate: a double rule framing its (positioned) element */
+.plate::before,
+.plate::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+  border: 1px solid var(--ink);
+}
+
+.plate::before {
+  inset: 8px;
+}
+
+.plate::after {
+  inset: 12px;
+  opacity: 0.45;
+}
+
+@media (min-width: 768px) {
+  .plate::before {
+    inset: 14px;
+  }
+  .plate::after {
+    inset: 19px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .plate::before {
+    inset: 18px;
+  }
+  .plate::after {
+    inset: 24px;
+  }
+}
+
+/* Display titles scale with the width AND the height of the screen, so a
+   hero still fits above the fold on a 13" laptop (≈1440×780). */
+@layer components {
+  .display-hero {
+    font-size: clamp(3.4rem, min(6.4vw, 11.5vh), 6.5rem);
+  }
+  .display-plate {
+    font-size: clamp(3.2rem, min(6vw, 11vh), 6rem);
+  }
+}
+
+/* Small caps labels */
+.caps {
+  font-family: var(--font-caps);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+/* The sigil: an engraved seal that opens into the void, Stone glowing */
+.sigil {
+  flex: none;
+  color: var(--sigil-ink, var(--ink));
+  overflow: visible;
+}
+
+.sigil-void {
+  fill: transparent;
+  transition: fill 0.3s ease;
+}
+
+.sigil-seal {
+  stroke: currentColor;
+  transition: stroke 0.3s ease;
+}
+
+.sigil-stone {
+  fill: currentColor;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    fill 0.3s ease,
+    transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.group:hover .sigil-void,
+.group:focus-visible .sigil-void,
+.group:active .sigil-void,
+.sigil[data-active="true"] .sigil-void {
+  fill: currentColor;
+}
+
+.group:hover .sigil-seal,
+.group:focus-visible .sigil-seal,
+.group:active .sigil-seal,
+.sigil[data-active="true"] .sigil-seal {
+  stroke: var(--sigil-paper, var(--paper));
+}
+
+.group:hover .sigil-stone,
+.group:focus-visible .sigil-stone,
+.group:active .sigil-stone,
+.sigil[data-active="true"] .sigil-stone {
+  fill: var(--stone);
+  transform: scale(2.1);
+  filter: drop-shadow(0 0 2px var(--stone));
+}
+
+/* Arms of Truth: they crawl out of the sigil and bind the element */
+.arm {
+  position: absolute;
+  pointer-events: none;
+  overflow: visible;
+  color: var(--arm-ink, var(--ink));
+  z-index: 2;
+  /* Fully hidden at rest; the reveal also opens the left margin so the
+     shoulder (drawn at x = 0) is not cut in half. */
+  clip-path: inset(-24px 100% -24px 0);
+  /* leaving: retreat quickly */
+  transition: clip-path 0.18s ease-in;
+}
+
+/* Entering: a fast start so the arm (and the hand riding at its tip) shows
+   up almost at once, then settles. */
+.group:hover .arm,
+.group:focus-visible .arm,
+.group:active .arm {
+  clip-path: inset(-24px -40px -24px -24px);
+  transition: clip-path 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.group:hover .arm + .arm,
+.group:focus-visible .arm + .arm,
+.group:active .arm + .arm {
+  transition-delay: 0.04s;
+}
+
+.arm svg {
+  position: absolute;
+  overflow: visible;
+}
+
+.arm-body {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.arm-halo {
+  stroke: var(--arm-paper, var(--paper));
+  fill: none;
+}
+
+.arm-stroke {
+  stroke: currentColor;
+  fill: none;
+}
+
+.arm-hand {
+  opacity: 0;
+  transform: scale(0.3);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 0.1s ease,
+    transform 0.1s ease;
+}
+
+.group:hover .arm-hand,
+.group:focus-visible .arm-hand,
+.group:active .arm-hand {
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 0.12s ease 0.12s,
+    transform 0.24s cubic-bezier(0.3, 1.6, 0.5, 1) 0.12s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arm {
+    display: none;
+  }
+  .sigil-void,
+  .sigil-seal,
+  .sigil-stone {
+    transition: none;
+  }
+}
+
+/* Folio: long-form reading (blog posts and notes) */
+.folio {
+  font-size: 1.25rem;
+  line-height: 1.65;
+  color: var(--ink);
+}
+
+.folio article > * + * {
+  margin-top: 1.3em;
+}
+
+.folio h1,
+.folio h2,
+.folio h3,
+.folio h4 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin-top: 1.8em;
+}
+
+.folio h1 {
+  font-size: 2.4rem;
+}
+
+.folio h2 {
+  font-size: 2.05rem;
+}
+
+.folio h3 {
+  font-size: 1.6rem;
+}
+
+.folio article > :first-child {
+  margin-top: 0;
+}
+
+/* Blog posts open with their title as the first heading */
+.folio-post article > h1:first-child {
+  font-size: clamp(3rem, min(6vw, 11vh), 6rem);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.folio article > h1:first-child + p::first-letter,
+.folio article > h1:first-child + blockquote + p::first-letter {
+  float: left;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 4.1em;
+  line-height: 0.82;
+  padding: 0.14em 0.16em 0.04em;
+  margin: 0.08em 0.16em 0 0;
+  border: 3px double var(--ink);
+}
+
+.folio p,
+.folio li {
+  color: var(--ink);
+}
+
+.folio a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.folio ul {
+  list-style: none;
+  padding-left: 1.4em;
+}
+
+.folio ul > li::before {
+  content: "—";
+  margin-left: -1.4em;
+  width: 1.4em;
+  display: inline-block;
+  color: var(--muted);
+}
+
+.folio ol {
+  list-style: upper-roman;
+  padding-left: 1.6em;
+}
+
+.folio :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  background: transparent;
+  border-bottom: 1px solid var(--rule-strong);
+  padding: 0 0.15em;
+  border-radius: 0;
+}
+
+.folio pre {
+  font-size: 0.8rem;
+}
+
+.folio img {
+  border: 1px solid var(--ink);
+  filter: grayscale(1);
+}
+
+.folio hr {
+  border: 0;
+  text-align: center;
+  height: auto;
+}
+
+.folio hr::after {
+  content: "✦";
+  font-family: var(--font-symbols);
+  font-size: 0.8rem;
+  color: var(--ink);
+}
+
+.folio table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.folio th,
+.folio td {
+  border-bottom: 1px solid var(--rule);
+  padding: 0.5em 0.75em 0.5em 0;
+  text-align: left;
+}
+
+.folio th {
+  font-family: var(--font-caps);
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-bottom-color: var(--ink);
 }

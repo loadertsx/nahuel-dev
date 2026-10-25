@@ -1,5 +1,9 @@
-import { ArrowUpRight, Github } from "lucide-react";
+import { SigilLink } from "~/components/alchemy/sigil-link";
+import { toRoman } from "~/utils/manuscript";
 
+const GLYPHS = ["☿", "♀", "♂", "♃", "♄", "☉", "☽"];
+
+/** One project as an engraved plate: numeral, planetary glyph, reagents. */
 export default function CardProject({
 	title,
 	content,
@@ -10,60 +14,44 @@ export default function CardProject({
 }: {
 	title: string;
 	content: string;
-	deployLink: string;
+	/** Omitted for projects without a public site (e.g. packages). */
+	deployLink?: string;
 	codeLink: string;
 	tags: string[];
 	index?: number;
 }) {
 	return (
-		<article
-			className="group relative p-6 rounded-lg border border-[var(--color-border)] dark:border-[var(--color-dark-border)] bg-[var(--color-surface)]/50 dark:bg-[var(--color-dark-surface)]/50 transition-all duration-300 hover:border-[var(--color-border-strong)] dark:hover:border-[var(--color-dark-border-strong)] hover:shadow-sm"
-			style={{ animationDelay: `${index * 100}ms` }}
-		>
-			{/* Header */}
-			<div className="flex items-start justify-between mb-3">
-				<h3 className="font-serif text-xl">{title}</h3>
-				<div className="flex items-center gap-2">
-					<a
-						href={codeLink}
-						target="_blank"
-						rel="noopener noreferrer"
-						className="p-1.5 rounded-full text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-dark-text)] hover:bg-[var(--color-border)] dark:hover:bg-[var(--color-dark-border)] transition-colors"
-						aria-label={`View ${title} source code`}
-					>
-						<Github className="w-4 h-4" />
-					</a>
-					<a
-						href={deployLink}
-						target="_blank"
-						rel="noopener noreferrer"
-						className="p-1.5 rounded-full text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-dark-text)] hover:bg-[var(--color-border)] dark:hover:bg-[var(--color-dark-border)] transition-colors"
-						aria-label={`Visit ${title} website`}
-					>
-						<ArrowUpRight className="w-4 h-4" />
-					</a>
-				</div>
+		<article className="relative flex flex-col gap-[18px] border border-[var(--ink)] bg-[var(--paper)] px-6 py-[26px] md:px-9 md:py-8">
+			<span
+				aria-hidden="true"
+				className="pointer-events-none absolute inset-1.5 border border-[var(--ink)] opacity-45"
+			/>
+			<div className="flex items-center justify-between">
+				<span className="caps text-[0.72rem] text-[var(--muted)]">
+					No. {toRoman(index + 1)}
+				</span>
+				<span aria-hidden="true" className="font-symbols text-2xl leading-none">
+					{GLYPHS[index % GLYPHS.length]}
+				</span>
 			</div>
-
-			{/* Description */}
-			<p className="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed mb-4">
+			<h3 className="font-serif font-medium text-[2.1rem] md:text-[2.5rem] leading-[1.05] tracking-[-0.01em]">
+				{title}
+			</h3>
+			<p className="text-[1.08rem] leading-[1.5] text-[var(--muted)]">
 				{content}
 			</p>
-
-			{/* Tags */}
-			<div className="flex flex-wrap gap-2">
-				{tags.map((tag) => (
-					<span
-						key={tag}
-						className="text-xs px-2.5 py-1 rounded-full bg-[var(--color-border)] dark:bg-[var(--color-dark-border)] text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]"
-					>
-						{tag}
-					</span>
-				))}
+			<p className="flex flex-wrap items-baseline gap-x-3 gap-y-1 pt-1.5">
+				<span className="caps text-[0.62rem] tracking-[0.24em] text-[var(--muted)]">
+					Reagents
+				</span>
+				<span className="caps text-[0.7rem] tracking-[0.14em]">
+					{tags.join(" · ")}
+				</span>
+			</p>
+			<div className="mt-auto flex gap-7 border-t border-[var(--rule)] pt-[18px]">
+				{deployLink && <SigilLink href={deployLink}>Visit</SigilLink>}
+				<SigilLink href={codeLink}>Source</SigilLink>
 			</div>
-
-			{/* Hover accent line */}
-			<div className="absolute bottom-0 left-6 right-6 h-px bg-[var(--color-accent)] dark:bg-[var(--color-dark-accent)] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
 		</article>
 	);
 }

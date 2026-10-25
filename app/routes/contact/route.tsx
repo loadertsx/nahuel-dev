@@ -1,5 +1,9 @@
-import { ArrowUpRight, Github, Linkedin, Mail } from "lucide-react";
+import { Sigil } from "~/components/alchemy/glyphs";
+import { PlateIntro } from "~/components/alchemy/ornament";
+import { CONTACT_LINKS } from "~/utils/contact";
 import type { Route } from "../contact/+types/route";
+
+export const handle = { plate: "Plate VII · Correspondence" };
 
 export const meta: Route.MetaFunction = () => {
 	return [
@@ -8,82 +12,49 @@ export const meta: Route.MetaFunction = () => {
 	];
 };
 
-const contactLinks = [
-	{
-		icon: Mail,
-		label: "Email",
-		value: "nahueldevelop@gmail.com",
-		href: "mailto:nahueldevelop@gmail.com",
-		description: "Best for project inquiries",
-	},
-	{
-		icon: Github,
-		label: "GitHub",
-		value: "@loadertsx",
-		href: "https://github.com/loadertsx",
-		description: "See my open source work",
-	},
-	{
-		icon: Linkedin,
-		label: "LinkedIn",
-		value: "nahueldevelop",
-		href: "https://www.linkedin.com/in/nahueldevelop/",
-		description: "Let's connect professionally",
-	},
-];
-
 export default function Contact() {
 	return (
-		<section className="max-w-2xl mx-auto pb-16">
-			{/* Header */}
-			<div className="mb-12">
-				<p className="text-sm font-medium tracking-widest uppercase text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] mb-3">
-					Contact
-				</p>
-				<h1 className="text-3xl md:text-4xl font-serif mb-4">
-					Let's work together
-				</h1>
-				<p className="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed">
-					I'm always open to new opportunities, collaborations, or just a good
-					conversation about building products.
-				</p>
-			</div>
-
-			{/* Contact Links */}
-			<div className="space-y-4">
-				{contactLinks.map((link) => (
-					<a
-						key={link.label}
-						href={link.href}
-						target={link.href.startsWith("mailto") ? undefined : "_blank"}
-						rel={
-							link.href.startsWith("mailto") ? undefined : "noopener noreferrer"
-						}
-						className="group flex items-center justify-between p-5 rounded-lg border border-[var(--color-border)] dark:border-[var(--color-dark-border)] hover:border-[var(--color-border-strong)] dark:hover:border-[var(--color-dark-border-strong)] transition-all duration-200 hover:shadow-sm"
-					>
-						<div className="flex items-center gap-4">
-							<div className="p-2 rounded-full bg-[var(--color-surface)] dark:bg-[var(--color-dark-surface)]">
-								<link.icon className="w-5 h-5 text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]" />
-							</div>
-							<div>
-								<p className="font-medium">{link.label}</p>
-								<p className="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">
+		<section className="pb-8">
+			<PlateIntro
+				fig="Fig. VII"
+				label="Correspondence"
+				title="Let's work"
+				titleItalic="together."
+				lede="I'm always open to new opportunities, collaborations, or just a good conversation about building products."
+				note="— I typically respond within a few days"
+			/>
+			<ul className="border-t border-[var(--ink)] max-w-[900px]">
+				{CONTACT_LINKS.map((link) => {
+					const external = !link.href.startsWith("mailto:");
+					return (
+						<li key={link.label} className="border-b border-[var(--rule)]">
+							<a
+								href={link.href}
+								target={external ? "_blank" : undefined}
+								rel={external ? "noopener noreferrer" : undefined}
+								className="group flex items-center gap-4 md:gap-6 py-5 md:py-6"
+							>
+								<Sigil size={18} />
+								<span className="flex flex-col gap-1 min-w-0">
+									<span className="caps text-[0.68rem] text-[var(--muted)]">
+										{link.label}
+									</span>
+									<span className="font-serif font-medium text-[1.6rem] md:text-[2.1rem] leading-[1.1] break-words group-hover:italic">
+										{link.value}
+									</span>
+								</span>
+								<span
+									aria-hidden="true"
+									className="hidden md:block flex-1 min-w-8 border-b border-dotted border-[var(--rule-strong)] translate-y-1"
+								/>
+								<span className="hidden md:block italic text-[var(--muted)]">
 									{link.description}
-								</p>
-							</div>
-						</div>
-						<ArrowUpRight className="w-4 h-4 text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] group-hover:text-[var(--color-accent)] dark:group-hover:text-[var(--color-dark-accent)] transition-colors" />
-					</a>
-				))}
-			</div>
-
-			{/* Response note */}
-			<div className="mt-12 pt-8 border-t border-[var(--color-border)] dark:border-[var(--color-dark-border)]">
-				<p className="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">
-					I typically respond within a few days. Looking forward to hearing from
-					you.
-				</p>
-			</div>
+								</span>
+							</a>
+						</li>
+					);
+				})}
+			</ul>
 		</section>
 	);
 }
