@@ -1,18 +1,15 @@
 import { Suspense } from "react";
-import { Await, data, Link } from "react-router";
+import { Await, data } from "react-router";
+import { IndexRow } from "~/components/alchemy/index-row";
+import { PlateIntro } from "~/components/alchemy/ornament";
 import ListSkeleton from "~/components/list-skeleton";
 import database from "~/db";
 import { Auth } from "~/lib/auth/auth.server";
+import { manuscriptDate, parseBlogDate, toRoman } from "~/utils/manuscript";
 import type { Route } from "../_layout.blog/+types/route";
 import { getAllBlogs } from "./queries.server";
 
-function parseDateDDMMYY(dateStr: string): Date | null {
-	const [day, month, year] = dateStr.split("/");
-	if (!day || !month || !year) return null;
-	const fullYear = year.length === 2 ? `20${year}` : year;
-	const date = new Date(Number(fullYear), Number(month) - 1, Number(day));
-	return Number.isNaN(date.getTime()) ? null : date;
-}
+export const handle = { plate: "Plate IV · The Codex" };
 
 export const meta = () => {
 	return [
@@ -42,64 +39,80 @@ export const loader = async ({ request, context }: Route.LoaderArgs) => {
 	return data({ results });
 };
 
+type PostSummary = {
+	id: string | null;
+	title: string | null;
+	date: string | null;
+	tags: string | null;
+};
+
+/** Posts bound into volumes by year, numbered across the whole codex. */
+function Codex({ posts }: { posts: PostSummary[] }) {
+	const years = new Map<
+		number,
+		{ post: PostSummary; n: number; date: Date | null }[]
+	>();
+	posts.forEach((post, i) => {
+		const date = parseBlogDate(post.date);
+		const year = date?.getFullYear() ?? 0;
+		const entries = years.get(year) ?? [];
+		entries.push({ post, n: i + 1, date });
+		years.set(year, entries);
+	});
+
+	return (
+		<div className="space-y-10 md:space-y-14">
+			{[...years].map(([year, entries]) => (
+				<section
+					key={year}
+					className="flex flex-col md:flex-row gap-2 md:gap-8"
+				>
+					<header className="md:w-[132px] xl:w-[200px] flex-none flex md:flex-col items-center md:items-start gap-3 md:gap-1 md:pt-4">
+						<h2 className="font-serif font-light text-[2.5rem] md:text-[2.6rem] xl:text-[3.5rem] leading-none tracking-normal">
+							{year ? toRoman(year) : "Undated"}
+						</h2>
+						{year > 0 && (
+							<span className="caps text-[0.68rem] text-[var(--muted)]">
+								{year}
+							</span>
+						)}
+					</header>
+					<div className="flex-1 min-w-0 border-t border-[var(--ink)]">
+						{entries.map(({ post, n, date }) => (
+							<IndexRow
+								key={post.id}
+								to={`/blog/${post.id}`}
+								numeral={toRoman(n)}
+								title={post.title ?? "Untitled"}
+								subtitle={post.tags}
+								date={date ? manuscriptDate(date) : null}
+							/>
+						))}
+					</div>
+				</section>
+			))}
+		</div>
+	);
+}
+
 export default function Blog({ loaderData }: Route.ComponentProps) {
 	const { results } = loaderData;
 
 	return (
-		<section className="max-w-2xl mx-auto pb-16">
-			{/* Header */}
-			<div className="mb-12">
-				<p className="text-sm font-medium tracking-widest uppercase text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] mb-3">
-					Writing
-				</p>
-				<h1 className="text-3xl md:text-4xl font-serif mb-4">Blog</h1>
-				<p className="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed">
-					Thoughts on React, TypeScript, and the craft of building for the web.
-				</p>
-			</div>
-
-			{/* Posts List */}
-			<div className="space-y-1">
-				<Suspense fallback={<ListSkeleton />}>
-					<Await resolve={results}>
-						{(results) => (
-							<>
-								{results?.map(
-									(post: {
-										id: string | null;
-										title: string | null;
-										date: string | null;
-										tags: string | null;
-									}) => (
-										<Link
-											key={`post-${post.id}`}
-											prefetch="intent"
-											to={`/blog/${post.id}`}
-											className="group flex items-baseline justify-between py-4 border-b border-[var(--color-border)] dark:border-[var(--color-dark-border)] hover:border-[var(--color-border-strong)] dark:hover:border-[var(--color-dark-border-strong)] transition-colors"
-										>
-											<span className="font-medium group-hover:text-[var(--color-accent)] dark:group-hover:text-[var(--color-dark-accent)] transition-colors">
-												{post.title}
-											</span>
-											{post.date &&
-												(() => {
-													const parsed = parseDateDDMMYY(post.date);
-													return parsed ? (
-														<span className="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] ml-4 shrink-0">
-															{parsed.toLocaleDateString("en-US", {
-																month: "short",
-																year: "numeric",
-															})}
-														</span>
-													) : null;
-												})()}
-										</Link>
-									),
-								)}
-							</>
-						)}
-					</Await>
-				</Suspense>
-			</div>
+		<section className="pb-8">
+			<PlateIntro
+				fig="Fig. IV"
+				label="Writings"
+				title="The"
+				titleItalic="Codex."
+				lede="Thoughts on React, TypeScript, and the craft of building for the web."
+				note="— notes from the workbench"
+			/>
+			<Suspense fallback={<ListSkeleton />}>
+				<Await resolve={results}>
+					{(results) => <Codex posts={results ?? []} />}
+				</Await>
+			</Suspense>
 		</section>
 	);
 }

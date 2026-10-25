@@ -1,14 +1,10 @@
-import { Suspense } from "react";
-import {
-	Await,
-	data,
-	Link,
-	useOutletContext,
-	useSearchParams,
-} from "react-router";
-import ListSkeleton from "~/components/list-skeleton";
-import { Tab, TabList, Tabs } from "~/components/ui/Tabs";
+import { data, Link, useOutletContext } from "react-router";
+import { twMerge } from "tailwind-merge";
+import { Sigil } from "~/components/alchemy/glyphs";
+import { IndexRow } from "~/components/alchemy/index-row";
+import { PlateIntro } from "~/components/alchemy/ornament";
 import database from "~/db";
+import { manuscriptDate, parseTimestamp, toRoman } from "~/utils/manuscript";
 import type { Route } from "./+types/route";
 import { getNotes } from "./queries.server";
 
@@ -16,11 +12,13 @@ type OutletContext = {
 	topics: Array<{ id: string; name: string }>;
 };
 
+export const handle = { plate: "Plate VI · The Grimoire" };
+
 export async function loader({ context, request }: Route.LoaderArgs) {
 	const url = new URL(request.url);
-	const topic = url.searchParams.get("topic");
+	const topic = url.searchParams.get("topic") ?? "";
 	const db = database(context.cloudflare.env.BLOG_DB);
-	const notes = await getNotes(db, topic || "");
+	const notes = await getNotes(db, topic);
 
 	return data({ topic, notes });
 }
@@ -39,68 +37,133 @@ export const meta: Route.MetaFunction = ({ matches }) => {
 	];
 };
 
+function TopicTab({
+	to,
+	label,
+	count,
+	selected,
+}: {
+	to: string;
+	label: string;
+	count?: number;
+	selected: boolean;
+}) {
+	return (
+		<Link
+			to={to}
+			preventScrollReset
+			aria-current={selected ? "page" : undefined}
+			className={twMerge(
+				"group inline-flex items-center gap-2.5 border px-3 py-2.5 pr-4 caps text-[0.68rem] leading-none transition-colors",
+				selected
+					? "bg-[var(--ink)] text-[var(--paper)] border-[var(--ink)]"
+					: "border-[var(--rule-strong)] hover:border-[var(--ink)]",
+			)}
+			style={
+				selected
+					? ({
+							"--sigil-ink": "var(--paper)",
+							"--sigil-paper": "var(--ink)",
+						} as React.CSSProperties)
+					: undefined
+			}
+		>
+			<Sigil size={13} active={selected} />
+			{label}
+			{count !== undefined && (
+				<span
+					className={twMerge(
+						"font-serif italic normal-case tracking-normal text-[0.95rem]",
+						selected ? "" : "text-[var(--muted)]",
+					)}
+				>
+					{count}
+				</span>
+			)}
+		</Link>
+	);
+}
+
 export default function Notes({ loaderData }: Route.ComponentProps) {
-	const { notes } = loaderData;
+	const { notes, topic } = loaderData;
 	const { topics } = useOutletContext<OutletContext>();
-	const [_, setSearchParams] = useSearchParams();
+
+	// Bind the notes into volumes, one per topic. Folios are numbered within
+	// their volume, as on the folio page, so filtering never renumbers them.
+	const volumes = topics
+		.map((t, v) => ({
+			...t,
+			vol: v + 1,
+			// Reading order inside a volume: oldest folio first.
+			notes: notes
+				.filter((note) => note.topicId === t.id)
+				.reverse()
+				.map((note, i) => ({ ...note, n: i + 1 })),
+		}))
+		.filter((v) => v.notes.length > 0);
 
 	return (
-		<section className="max-w-2xl mx-auto pb-16">
-			{/* Header */}
-			<div className="mb-8">
-				<p className="text-sm font-medium tracking-widest uppercase text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] mb-3">
-					Knowledge Base
-				</p>
-				<h1 className="text-3xl md:text-4xl font-serif mb-4">Notes</h1>
-				<p className="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed">
-					Quick references and learnings organized by topic.
-				</p>
-			</div>
+		<section className="pb-8">
+			<PlateIntro
+				fig="Fig. VI"
+				label="Knowledge Base"
+				title="The"
+				titleItalic="Grimoire."
+				lede="Quick references and learnings, bound into volumes by topic."
+				note="— what is learned is never lost"
+			/>
 
-			{/* Topics Tabs */}
-			<Tabs
-				onSelectionChange={(key) => {
-					setSearchParams({ topic: key.toString() });
-				}}
-				className="mb-8"
+			<nav
+				aria-label="Topics"
+				className="flex flex-wrap gap-2.5 pb-10 md:pb-14"
 			>
-				<TabList className="flex gap-2 flex-wrap">
-					{topics.map((topic) => (
-						<Tab
-							key={topic.id}
-							id={topic.id}
-							className="px-4 py-2 text-sm font-medium rounded-full border border-[var(--color-border)] dark:border-[var(--color-dark-border)] cursor-pointer transition-all duration-200 hover:border-[var(--color-border-strong)] dark:hover:border-[var(--color-dark-border-strong)] data-[selected]:bg-[var(--color-text)] dark:data-[selected]:bg-[var(--color-dark-text)] data-[selected]:text-[var(--color-bg)] dark:data-[selected]:text-[var(--color-dark-bg)] data-[selected]:border-transparent"
-						>
-							{topic.name}
-						</Tab>
-					))}
-				</TabList>
-			</Tabs>
+				<TopicTab to="/notes" label="All" selected={!topic} />
+				{topics.map((t) => (
+					<TopicTab
+						key={t.id}
+						to={`/notes?topic=${t.id}`}
+						label={t.name}
+						selected={topic === t.id}
+					/>
+				))}
+			</nav>
 
-			{/* Notes List */}
-			<div className="space-y-1">
-				<Suspense fallback={<ListSkeleton />}>
-					<Await resolve={notes}>
-						{(notes) => (
-							<>
-								{notes?.map(
-									(note: { id: string | null; title: string | null }) => (
-										<Link
-											key={`note-${note.id}`}
-											prefetch="intent"
-											to={`/notes/${note.id}`}
-											className="group flex items-baseline justify-between py-4 border-b border-[var(--color-border)] dark:border-[var(--color-dark-border)] hover:border-[var(--color-border-strong)] dark:hover:border-[var(--color-dark-border-strong)] transition-colors"
-										>
-											<span className="font-medium group-hover:text-[var(--color-accent)] dark:group-hover:text-[var(--color-dark-accent)] transition-colors">
-												{note.title}
-											</span>
-										</Link>
-									),
-								)}
-							</>
-						)}
-					</Await>
-				</Suspense>
+			<div className="space-y-10 md:space-y-14">
+				{volumes.map((volume) => (
+					<section
+						key={volume.id}
+						className="flex flex-col md:flex-row gap-2.5 md:gap-8"
+					>
+						<header className="md:w-[170px] xl:w-[260px] flex-none space-y-1.5 md:pt-4">
+							<p className="caps text-[0.66rem] text-[var(--muted)]">
+								Vol. {toRoman(volume.vol)} · {volume.notes.length}{" "}
+								{volume.notes.length === 1 ? "folio" : "folios"}
+							</p>
+							<h2 className="font-serif font-light text-[2rem] xl:text-[2.15rem] leading-[1.05] tracking-normal">
+								{volume.name}
+							</h2>
+						</header>
+						<div className="flex-1 min-w-0 border-t border-[var(--ink)]">
+							{volume.notes.map((note) => {
+								const date = parseTimestamp(note.createdAt);
+								return (
+									<IndexRow
+										key={note.id}
+										to={`/notes/${note.id}`}
+										numeral={toRoman(note.n)}
+										title={note.title}
+										date={date ? manuscriptDate(date) : null}
+									/>
+								);
+							})}
+						</div>
+					</section>
+				))}
+				{volumes.length === 0 && (
+					<p className="italic text-[var(--muted)]">
+						This volume is still blank.
+					</p>
+				)}
 			</div>
 		</section>
 	);

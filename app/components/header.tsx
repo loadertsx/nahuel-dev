@@ -1,7 +1,45 @@
-import { Menu as MenuIcon, Moon, Sun, X } from "lucide-react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useMatches } from "react-router";
 import { twMerge } from "tailwind-merge";
+import { CONTACT_LINKS } from "~/utils/contact";
 import { Theme, useTheme } from "~/utils/theme-provider";
+import { Ouroboros, Sigil } from "./alchemy/glyphs";
+import { Ornament } from "./alchemy/ornament";
+import { SigilLink } from "./alchemy/sigil-link";
+
+const LINKS = [
+	{ href: "/blog", text: "Blog" },
+	{ href: "/projects", text: "Projects" },
+	{ href: "/about", text: "About" },
+	{ href: "/notes", text: "Notes" },
+];
+
+const MENU = [{ href: "/", text: "Home" }, ...LINKS];
+const MENU_NUMERALS = ["I", "II", "III", "IV", "V"];
+
+/** Routes describe themselves with `handle = { plate: "PLATE III · …" }`. */
+function usePlateLabel() {
+	const matches = useMatches();
+	for (let i = matches.length - 1; i >= 0; i--) {
+		const handle = matches[i].handle as { plate?: string } | undefined;
+		if (handle?.plate) return handle.plate;
+	}
+	return null;
+}
+
+function ThemeToggle() {
+	const [theme, setTheme] = useTheme();
+	const dark = theme === Theme.DARK;
+	return (
+		<button
+			type="button"
+			aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
+			className="grid place-items-center size-[34px] rounded-full border border-[var(--ink)] font-symbols text-base leading-none transition-colors hover:bg-[var(--ink)] hover:text-[var(--paper)]"
+			onClick={() => setTheme(dark ? Theme.LIGHT : Theme.DARK)}
+		>
+			{dark ? "☉" : "☽"}
+		</button>
+	);
+}
 
 export default function Header({
 	setOpenMenu,
@@ -11,142 +49,159 @@ export default function Header({
 	openMenu: boolean;
 }) {
 	const [theme, setTheme] = useTheme();
-
-	const links = [
-		{ href: "/blog", text: "Blog" },
-		{ href: "/projects", text: "Projects" },
-		{ href: "/about", text: "About" },
-		{ href: "/notes", text: "Notes" },
-	];
-
-	const location = useLocation();
-	const path = location.pathname.split("/")[1];
+	const plate = usePlateLabel();
+	const { pathname } = useLocation();
+	const section = `/${pathname.split("/")[1]}`;
+	const isActive = (href: string) =>
+		href === "/" ? pathname === "/" : section === href;
 
 	return (
-		<header className="relative z-50">
-			<div className="max-w-[1280px] mx-auto px-5 py-8 lg:px-[100px] lg:py-10 flex justify-between items-center">
-				{/* Logo */}
+		<header className="relative z-50 px-[22px] md:px-10 xl:px-[72px] pt-[22px] md:pt-10">
+			<div className="flex items-center justify-between gap-6 pb-4 md:pb-6">
 				<Link
 					to="/"
-					className="font-serif text-xl tracking-tight transition-colors hover:text-[var(--color-accent)] dark:hover:text-[var(--color-dark-accent)]"
+					viewTransition
+					className="flex items-center gap-2.5 font-serif font-medium text-[1.4rem] md:text-[1.6rem] tracking-[-0.01em]"
 				>
+					<Ouroboros size={28} />
 					loader.tsx
 				</Link>
 
-				{/* Desktop Navigation */}
-				<nav className="hidden md:flex items-center gap-8">
-					<ul className="flex gap-8">
-						{links.map((link) => (
-							<li key={`link-${link.text}`}>
-								<Link
-									to={link.href}
-									viewTransition
-									className={twMerge(
-										"text-sm font-medium tracking-wide uppercase transition-colors duration-200",
-										link.href === `/${path}`
-											? "text-[var(--color-accent)] dark:text-[var(--color-dark-accent)]"
-											: "text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-dark-text)]",
-									)}
-								>
-									{link.text}
-								</Link>
-							</li>
-						))}
-					</ul>
+				{plate && (
+					<p className="hidden xl:block caps text-[0.68rem] tracking-[0.3em] text-[var(--muted)]">
+						{plate}
+					</p>
+				)}
 
-					{/* Theme Toggle */}
-					<button
-						type="button"
-						aria-label="Toggle theme"
-						className="p-2 rounded-full transition-all duration-200 text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-dark-text)] hover:bg-[var(--color-surface)] dark:hover:bg-[var(--color-dark-surface)]"
-						onClick={() => {
-							setTheme(theme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT);
-						}}
-					>
-						{theme === Theme.DARK ? (
-							<Moon className="w-4 h-4" />
-						) : (
-							<Sun className="w-4 h-4" />
-						)}
-					</button>
+				<nav className="hidden md:flex items-center gap-[22px] xl:gap-[34px]">
+					{LINKS.map((link) => (
+						<SigilLink
+							key={link.href}
+							to={link.href}
+							active={isActive(link.href)}
+						>
+							{link.text}
+						</SigilLink>
+					))}
+					<ThemeToggle />
 				</nav>
 
-				{/* Mobile Controls */}
 				<div className="flex items-center gap-3 md:hidden">
+					<ThemeToggle />
 					<button
+						aria-label="Open the index of plates"
 						type="button"
-						aria-label="Toggle theme"
-						className="p-2 rounded-full transition-all duration-200 text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-dark-text)]"
-						onClick={() => {
-							setTheme(theme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT);
-						}}
+						className="grid place-items-center size-[34px] rounded-full border border-[var(--ink)]"
+						onClick={() => setOpenMenu(true)}
 					>
-						{theme === Theme.DARK ? (
-							<Moon className="w-4 h-4" />
-						) : (
-							<Sun className="w-4 h-4" />
-						)}
-					</button>
-
-					<button
-						aria-label="Open menu"
-						type="button"
-						className="p-2 transition-colors"
-						onClick={() => setOpenMenu(!openMenu)}
-					>
-						{openMenu ? (
-							<X className="w-5 h-5" />
-						) : (
-							<MenuIcon className="w-5 h-5" />
-						)}
+						<span className="flex flex-col items-center gap-[4px]">
+							<span className="block h-px w-3.5 bg-[var(--ink)]" />
+							<span className="block h-px w-2.5 bg-[var(--ink)]" />
+							<span className="block h-px w-3.5 bg-[var(--ink)]" />
+						</span>
 					</button>
 				</div>
 			</div>
+			<Ornament />
 
-			{/* Mobile Navigation */}
+			{/* Mobile: the index of plates */}
 			<nav
+				aria-hidden={!openMenu}
 				className={twMerge(
-					"fixed left-0 top-0 h-screen w-full transition-all duration-500 ease-out bg-[var(--color-bg)] dark:bg-[var(--color-dark-bg)] md:hidden",
+					"plate fixed inset-0 z-50 overflow-y-auto bg-[var(--paper)] px-[22px] pt-[34px] pb-10 transition-opacity duration-300 md:hidden",
 					openMenu
 						? "opacity-100 pointer-events-auto"
 						: "opacity-0 pointer-events-none",
 				)}
-				style={{ paddingTop: "80px" }}
 			>
-				<ul className="px-5 space-y-1">
-					{links.map((link, index) => (
-						<li
-							key={`mobile-link-${link.text}`}
-							className={twMerge(
-								"transform transition-all duration-300",
-								openMenu
-									? "translate-y-0 opacity-100"
-									: "translate-y-4 opacity-0",
-							)}
-							style={{ transitionDelay: openMenu ? `${index * 50}ms` : "0ms" }}
-						>
-							<Link
-								onClick={() => setOpenMenu(false)}
-								to={link.href}
+				<div className="flex items-center justify-between pb-4">
+					<Link
+						to="/"
+						onClick={() => setOpenMenu(false)}
+						className="flex items-center gap-2.5 font-serif font-medium text-[1.4rem]"
+					>
+						<Ouroboros size={24} />
+						loader.tsx
+					</Link>
+					<button
+						type="button"
+						aria-label="Close the index of plates"
+						className="grid place-items-center size-[34px] rounded-full border border-[var(--ink)] font-symbols text-[0.8rem]"
+						onClick={() => setOpenMenu(false)}
+					>
+						✕
+					</button>
+				</div>
+				<Ornament className="mb-10" />
+				<p className="caps text-[0.7rem] tracking-[0.3em] text-[var(--muted)]">
+					Index of plates
+				</p>
+				<ul className="mt-4">
+					{MENU.map((link, i) => {
+						const active = isActive(link.href);
+						return (
+							<li
+								key={link.href}
 								className={twMerge(
-									"block py-4 font-serif text-3xl border-b transition-colors",
-									"border-[var(--color-border)] dark:border-[var(--color-dark-border)]",
-									link.href === `/${path}`
-										? "text-[var(--color-accent)] dark:text-[var(--color-dark-accent)]"
-										: "hover:text-[var(--color-accent)] dark:hover:text-[var(--color-dark-accent)]",
+									"border-b border-[var(--rule)] transition-all duration-300",
+									openMenu
+										? "translate-y-0 opacity-100"
+										: "translate-y-3 opacity-0",
 								)}
+								style={{ transitionDelay: openMenu ? `${i * 50}ms` : "0ms" }}
 							>
-								{link.text}
-							</Link>
-						</li>
-					))}
+								<Link
+									to={link.href}
+									viewTransition
+									onClick={() => setOpenMenu(false)}
+									className="group flex items-center gap-4 py-4"
+								>
+									<Sigil size={22} active={active} />
+									<span
+										className={twMerge(
+											"flex-1 font-serif text-[2.6rem] leading-none tracking-[-0.01em]",
+											active ? "italic font-light" : "font-medium",
+										)}
+									>
+										{link.text}
+									</span>
+									<span className="caps text-[0.72rem] text-[var(--muted)]">
+										{MENU_NUMERALS[i]}
+									</span>
+								</Link>
+							</li>
+						);
+					})}
 				</ul>
-
-				{/* Mobile footer */}
-				<div className="absolute bottom-0 left-0 right-0 px-5 py-8 border-t border-[var(--color-border)] dark:border-[var(--color-dark-border)]">
-					<p className="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">
-						Building products with care.
-					</p>
+				<div className="flex flex-wrap gap-x-6 gap-y-3 pt-9">
+					{CONTACT_LINKS.map((link) => (
+						<SigilLink key={link.href} href={link.href}>
+							{link.label}
+						</SigilLink>
+					))}
+				</div>
+				<div className="flex items-center gap-3 pt-7 caps text-[0.72rem]">
+					<button
+						type="button"
+						onClick={() => setTheme(Theme.LIGHT)}
+						className={
+							theme === Theme.LIGHT
+								? "text-[var(--ink)]"
+								: "text-[var(--muted)]"
+						}
+					>
+						<span className="font-symbols">☉</span> Light
+					</button>
+					<span className="text-[var(--muted)]">·</span>
+					<button
+						type="button"
+						onClick={() => setTheme(Theme.DARK)}
+						className={
+							theme === Theme.DARK ? "text-[var(--ink)]" : "text-[var(--muted)]"
+						}
+					>
+						<span className="font-symbols">☽</span> Dark
+					</button>
 				</div>
 			</nav>
 		</header>

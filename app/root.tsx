@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import Footer from "./components/footer";
 import Header from "./components/header";
 import "./app.css";
 import {
@@ -14,6 +15,9 @@ import {
 import type { Route } from "./+types/root";
 import { ThemeProvider } from "./utils/theme-provider";
 
+const FONTS =
+	"https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols&family=Pinyon+Script&display=swap";
+
 export const links = () => [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
 	{
@@ -21,15 +25,8 @@ export const links = () => [
 		href: "https://fonts.gstatic.com",
 		crossOrigin: "anonymous",
 	},
-	{
-		rel: "preload",
-		as: "style",
-		href: "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Outfit:wght@300;400;500;600;700&display=swap",
-	},
-	{
-		rel: "stylesheet",
-		href: "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Outfit:wght@300;400;500;600;700&display=swap",
-	},
+	{ rel: "preload", as: "style", href: FONTS },
+	{ rel: "stylesheet", href: FONTS },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -60,9 +57,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				)}
 			>
 				<ThemeProvider>
-					<Header openMenu={openMenu} setOpenMenu={setOpenMenu} />
-					<div className="max-w-[1280px] mx-auto mt-10 px-5 lg:px-[100px]">
-						{children}
+					<div className="plate relative isolate min-h-screen">
+						<div className="max-w-[1440px] mx-auto flex flex-col min-h-screen">
+							<Header openMenu={openMenu} setOpenMenu={setOpenMenu} />
+							<main className="flex-1 px-6 md:px-14 xl:px-[120px]">
+								{children}
+							</main>
+							<Footer />
+						</div>
 					</div>
 				</ThemeProvider>
 				<ScrollRestoration />

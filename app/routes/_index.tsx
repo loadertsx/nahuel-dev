@@ -1,7 +1,10 @@
-import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
-import { Link } from "react-router";
+import { Eyebrow } from "~/components/alchemy/ornament";
+import { PlateButton } from "~/components/alchemy/plate-button";
+import { LazyGateScene } from "~/components/gate-scene/lazy-gate-scene";
 
 import type { Route } from "./+types/_index";
+
+export const handle = { plate: "Plate I · Opus Magnum" };
 
 export const meta: Route.MetaFunction = () => {
 	return [
@@ -14,85 +17,128 @@ export const meta: Route.MetaFunction = () => {
 	];
 };
 
+const STEPS = [
+	{
+		numeral: "I.",
+		title: "Comprehension",
+		body: "Understand the problem, the people and the constraints before a single line is written.",
+		glyph: (
+			<>
+				<circle cx="20" cy="20" r="15" />
+				<circle cx="20" cy="20" r="3" fill="currentColor" />
+			</>
+		),
+	},
+	{
+		numeral: "II.",
+		title: "Deconstruction",
+		body: "Break it into simple, honest parts. Keep only what earns its place.",
+		glyph: (
+			<>
+				<path d="M6 10h28L20 34Z" />
+				<path d="M11 18h18" />
+			</>
+		),
+	},
+	{
+		numeral: "III.",
+		title: "Reconstruction",
+		body: "Rebuild it as a product that feels inevitable — nothing lost, nothing wasted.",
+		glyph: (
+			<>
+				<path d="M20 6l14 24H6Z" />
+				<circle cx="20" cy="22" r="3.2" />
+			</>
+		),
+	},
+];
+
 export default function Index() {
 	return (
-		<section className="min-h-[70vh] flex flex-col justify-center py-12 md:py-20">
+		<>
 			{/* Hero */}
-			<div className="space-y-6 max-w-2xl">
-				<p className="text-sm font-medium tracking-widest uppercase text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">
-					Software Developer
-				</p>
+			<section className="grid xl:grid-cols-[minmax(0,1fr)_auto] items-center gap-10 xl:gap-12 pt-10 md:pt-16 xl:pt-12 pb-16 md:pb-24 xl:pb-24">
+				<figure className="order-first xl:order-last flex flex-col items-center gap-3">
+					<LazyGateScene className="aspect-square w-full max-w-[340px] md:max-w-[460px] xl:w-[min(540px,60vh)] xl:max-w-none" />
+					<figcaption className="italic text-[0.95rem] text-[var(--muted)]">
+						Fig. II — Porta Veritatis
+					</figcaption>
+					<p className="caps text-[0.62rem] tracking-[0.3em] text-[var(--muted)]">
+						One is all · All is one
+					</p>
+				</figure>
 
-				<h1 className="text-4xl md:text-5xl lg:text-6xl font-serif leading-[1.1] tracking-tight">
-					Building products
-					<br />
-					<span className="text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">
-						with intention
-					</span>
-				</h1>
-
-				<p className="text-lg md:text-xl text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed max-w-xl">
-					I craft web experiences that feel natural and work beautifully.
-					Currently focused on React, TypeScript, and the modern web platform.
-				</p>
-			</div>
-
-			{/* CTAs */}
-			<div className="flex flex-col sm:flex-row gap-4 mt-10">
-				<Link
-					to="/projects"
-					viewTransition
-					className="group inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium tracking-wide bg-[var(--color-text)] dark:bg-[var(--color-dark-text)] text-[var(--color-bg)] dark:text-[var(--color-dark-bg)] rounded-full transition-all duration-300 hover:gap-3"
-				>
-					View my work
-					<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-				</Link>
-
-				<Link
-					to="/blog"
-					viewTransition
-					className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium tracking-wide border border-[var(--color-border-strong)] dark:border-[var(--color-dark-border-strong)] rounded-full transition-all duration-300 hover:border-[var(--color-text)] dark:hover:border-[var(--color-dark-text)]"
-				>
-					Read the blog
-				</Link>
-			</div>
-
-			{/* Social Links */}
-			<div className="flex items-center gap-6 mt-16 pt-8 border-t border-[var(--color-border)] dark:border-[var(--color-dark-border)]">
-				<span className="text-xs font-medium tracking-widest uppercase text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)]">
-					Connect
-				</span>
-				<div className="flex items-center gap-4">
-					<a
-						href="https://github.com/loadertsx"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="p-2 text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-dark-text)] transition-colors"
-						aria-label="GitHub"
-					>
-						<Github className="w-5 h-5" />
-					</a>
-					<a
-						href="https://www.linkedin.com/in/nahueldevelop/"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="p-2 text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-dark-text)] transition-colors"
-						aria-label="LinkedIn"
-					>
-						<Linkedin className="w-5 h-5" />
-					</a>
-					<a
-						href="mailto:nahueldevelop@gmail.com"
-						className="p-2 text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-dark-text)] transition-colors"
-						aria-label="Email"
-					>
-						<Mail className="w-5 h-5" />
-					</a>
+				<div className="space-y-7 md:space-y-8">
+					<Eyebrow fig="Fig. I" label="Software Developer" />
+					<h1 className="font-serif font-light display-hero leading-[0.88] tracking-[-0.02em]">
+						Building
+						<br />
+						products with
+						<br />
+						<em className="font-light">intention.</em>
+					</h1>
+					<p className="max-w-[520px] text-[1.125rem] md:text-[1.3rem] leading-[1.5] text-[var(--muted)]">
+						I craft web experiences that feel natural and work beautifully —
+						currently with React, TypeScript and the modern web platform.
+					</p>
+					<div className="flex flex-col sm:flex-row gap-4 sm:gap-5 pt-2">
+						<PlateButton to="/projects">View my work</PlateButton>
+						<PlateButton to="/blog" variant="secondary">
+							Read the blog
+						</PlateButton>
+					</div>
+					<p className="font-script text-[1.75rem] text-[var(--muted)]">
+						— solve et coagula
+					</p>
 				</div>
-			</div>
+			</section>
 
-			{/* Decorative element */}
-			<div className="hidden lg:block absolute right-[10%] top-1/2 -translate-y-1/2 w-px h-32 bg-gradient-to-b from-transparent via-[var(--color-border-strong)] dark:via-[var(--color-dark-border-strong)] to-transparent" />
-		</section>
+			{/* II · The law of equivalent exchange */}
+			<section className="space-y-10 md:space-y-14 pb-8">
+				<div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-8">
+					<span className="font-serif font-light text-[4.5rem] md:text-[7rem] leading-[0.8]">
+						II
+					</span>
+					<div className="space-y-2.5">
+						<p className="caps text-[0.72rem] text-[var(--muted)]">
+							The law of equivalent exchange
+						</p>
+						<h2 className="font-serif font-medium text-[2rem] md:text-[2.9rem] leading-[1.1] tracking-[-0.01em]">
+							To build something, I first take it apart.
+						</h2>
+					</div>
+				</div>
+				<ol className="grid xl:grid-cols-3 gap-9 xl:gap-14">
+					{STEPS.map((step) => (
+						<li
+							key={step.title}
+							className="flex flex-col md:flex-row xl:flex-col gap-3.5 md:gap-8 xl:gap-4 pt-6 xl:pt-7 border-t border-[var(--ink)]"
+						>
+							<div className="flex items-center gap-3.5 md:w-[150px] xl:w-auto flex-none">
+								<svg
+									aria-hidden="true"
+									viewBox="0 0 40 40"
+									className="size-9"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="1.2"
+								>
+									{step.glyph}
+								</svg>
+								<span className="caps text-[0.8rem]">{step.numeral}</span>
+							</div>
+							<div className="space-y-2.5">
+								<h3 className="font-serif font-medium text-[2rem] md:text-[2.2rem] leading-[1.1]">
+									{step.title}
+								</h3>
+								<p className="text-[1.08rem] md:text-[1.15rem] leading-[1.5] text-[var(--muted)]">
+									{step.body}
+								</p>
+							</div>
+						</li>
+					))}
+				</ol>
+			</section>
+		</>
 	);
 }

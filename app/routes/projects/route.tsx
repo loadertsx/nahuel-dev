@@ -1,7 +1,15 @@
 import type { MetaFunction } from "react-router";
+import { PlateIntro } from "~/components/alchemy/ornament";
 import CardProject from "./components/card-project";
 
 const projectsItems = [
+	{
+		title: "The Rime of the Ancient Mariner",
+		content:
+			"A pi package that gives the pi coding agent a memory: persistent SQLite-backed knowledge, typed session summaries, a searchable memory library and a read-only plan mode.",
+		codeLink: "https://github.com/loadertsx/the-rime-of-the-ancient-mariner",
+		tags: ["TypeScript", "pi", "SQLite", "Drizzle"],
+	},
 	{
 		title: "Treefy",
 		content:
@@ -27,12 +35,11 @@ const projectsItems = [
 		tags: ["Remix", "Prisma", "Supabase"],
 	},
 	{
-		title: "WhosIn?",
+		title: "Notion MCP",
 		content:
-			"WhosIn is an app to create events and have your friends confirm their presence.",
-		deployLink: "https://whos-in-sage.vercel.app/",
-		codeLink: "https://github.com/loadertsx/WhosIn-",
-		tags: ["Next.js", "Prisma", "Clerk"],
+			"A lightweight MCP server that lets AI assistants work inside a Notion workspace: search and read pages, create new ones and write documentation from markdown.",
+		codeLink: "https://github.com/loadertsx/notion-mcp",
+		tags: ["Python", "MCP", "Notion API"],
 	},
 	{
 		title: "Hacker News Clone",
@@ -42,15 +49,9 @@ const projectsItems = [
 		codeLink: "https://github.com/loadertsx/hacker-news-remix-clone",
 		tags: ["Remix", "TailwindCSS", "API"],
 	},
-	{
-		title: "React Flag API App",
-		content:
-			"An app made with react that consumes the flag-api API to display the countries and their data.",
-		deployLink: "https://react-flag-api.netlify.app/",
-		codeLink: "https://github.com/loadertsx/react-flag-API",
-		tags: ["React", "React Router", "API"],
-	},
 ];
+
+export const handle = { plate: "Plate III · Transmutations" };
 
 export const meta: MetaFunction = () => {
 	return [
@@ -61,21 +62,16 @@ export const meta: MetaFunction = () => {
 
 export default function Projects() {
 	return (
-		<section className="max-w-3xl mx-auto pb-16">
-			{/* Header */}
-			<div className="mb-12">
-				<p className="text-sm font-medium tracking-widest uppercase text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] mb-3">
-					Selected Work
-				</p>
-				<h1 className="text-3xl md:text-4xl font-serif mb-4">Projects</h1>
-				<p className="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-dark-text-secondary)] leading-relaxed">
-					A collection of products and experiments I've built. Each one taught
-					me something new about crafting better software.
-				</p>
-			</div>
-
-			{/* Projects Grid */}
-			<div className="grid gap-6 sm:grid-cols-2">
+		<section className="pb-8">
+			<PlateIntro
+				fig="Fig. III"
+				label="Selected Work"
+				title="The"
+				titleItalic="Transmutations."
+				lede="A collection of products and experiments I've built. Each one taught me something new about crafting better software."
+				note="— nothing is gained without sacrifice"
+			/>
+			<div className="grid gap-5 md:gap-7 md:grid-cols-2">
 				{projectsItems.map((project, index) => (
 					<CardProject
 						key={project.title}

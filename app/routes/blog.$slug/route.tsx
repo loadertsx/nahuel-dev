@@ -1,16 +1,14 @@
-import { ArrowLeft } from "lucide-react";
-import { data, useNavigate } from "react-router";
+import { data } from "react-router";
+import { Eyebrow } from "~/components/alchemy/ornament";
+import { SigilLink } from "~/components/alchemy/sigil-link";
 import { MarkdownView } from "~/components/markdown";
+import database from "~/db";
+import { manuscriptDate, parseBlogDate } from "~/utils/manuscript";
 import { markdownParser } from "~/utils/md.server";
 import type { Route } from "../blog.$slug/+types/route";
 import { getBlogPost } from "./queries.server";
-import database from "~/db";
 
-interface IBlog {
-	content: string | null;
-	tags: string | null;
-	title: string | null;
-}
+export const handle = { plate: "Plate IV · Folio" };
 
 export function headers(_: Route.HeadersArgs) {
 	return {
@@ -19,15 +17,17 @@ export function headers(_: Route.HeadersArgs) {
 }
 
 export async function loader({ params, context }: Route.LoaderArgs) {
-	const slug = params.slug;
-
 	const db = database(context.cloudflare.env.BLOG_DB);
-	const result: IBlog[] = await getBlogPost(String(slug), db);
-	const content = result[0]?.content && markdownParser(result[0].content);
-	const tags = result[0]?.tags;
-	const title = result[0]?.title;
+	const [post] = await getBlogPost(String(params.slug), db);
+	const content = post?.content && markdownParser(post.content);
+	const date = parseBlogDate(post?.date ?? null);
 
-	return data({ content, tags, title });
+	return data({
+		content,
+		tags: post?.tags,
+		title: post?.title,
+		date: date ? manuscriptDate(date) : null,
+	});
 }
 
 export const meta = ({ data }: Route.MetaArgs) => {
@@ -38,22 +38,16 @@ export const meta = ({ data }: Route.MetaArgs) => {
 };
 
 export default function BlogId({ loaderData }: Route.ComponentProps) {
-	const { content } = loaderData;
-	const navigate = useNavigate();
+	const { content, tags, date } = loaderData;
 
 	return (
-		<div className="lg:min-w-[800px] lg:max-w-[800px] mx-auto prose prose-md lg:prose-lg">
-			<button
-				type="button"
-				className="flex mb-10 dark:text-white items-center font-bold gap-2 z-0 transition-transform transform hover:-translate-x-1 focus:outline-none cursor-pointer"
-				onClick={() => {
-					navigate("/blog");
-				}}
-			>
-				<ArrowLeft />
-				<span className="mb-[1px]">Back to posts</span>
-			</button>
-			{content && <MarkdownView content={content} />}
+		<div className="max-w-[760px] pt-8 md:pt-14 pb-8 space-y-6">
+			<SigilLink to="/blog">Back to the Codex</SigilLink>
+			<Eyebrow fig="Folio" label={date ?? "Undated"} />
+			{tags && <p className="italic text-[1rem] text-[var(--muted)]">{tags}</p>}
+			<div className="folio folio-post border-t border-[var(--ink)] pt-8 md:pt-10">
+				{content && <MarkdownView content={content} />}
+			</div>
 		</div>
 	);
 }
