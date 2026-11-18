@@ -19,7 +19,7 @@ import {
 	type Texture,
 	Vector3,
 } from "three";
-import { Theme, useTheme } from "~/utils/theme-provider";
+import { useTheme } from "~/utils/theme-provider";
 import {
 	makeCircleTexture,
 	makeDoorTextures,
@@ -729,10 +729,11 @@ function CameraRig({ reduced, orbit }: { reduced: boolean; orbit: number }) {
 }
 
 function usePrefersReducedMotion() {
-	const [reduced, setReduced] = useState(false);
+	const [reduced, setReduced] = useState(
+		() => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+	);
 	useEffect(() => {
 		const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-		setReduced(mq.matches);
 		const onChange = () => setReduced(mq.matches);
 		mq.addEventListener("change", onChange);
 		return () => mq.removeEventListener("change", onChange);
@@ -759,13 +760,15 @@ function useOnScreen() {
 export default function GateScene({
 	className,
 	orbit = 0,
+	palette: paletteName,
 }: {
 	className?: string;
 	/** Camera angle around the gate in degrees (0 = frontal). */
 	orbit?: number;
+	palette?: keyof typeof PALETTES;
 }) {
 	const [theme] = useTheme();
-	const palette = theme === Theme.DARK ? PALETTES.dark : PALETTES.light;
+	const palette = PALETTES[paletteName ?? theme];
 	const reduced = usePrefersReducedMotion();
 	const onScreen = useOnScreen();
 
@@ -773,7 +776,7 @@ export default function GateScene({
 		<div ref={onScreen.ref} className={className} aria-hidden="true">
 			<Canvas
 				shadows
-				dpr={[1, 1.75]}
+				dpr={[1, 1.5]}
 				frameloop={reduced ? "demand" : onScreen.visible ? "always" : "never"}
 				camera={{ position: [0, 3, 11.5], fov: 30, near: 0.1, far: 60 }}
 				gl={{ alpha: true, antialias: true }}
@@ -787,7 +790,7 @@ export default function GateScene({
 					position={[3.5, 7, 6]}
 					intensity={palette === PALETTES.dark ? 1.4 : 1.8}
 					castShadow
-					shadow-mapSize={[2048, 2048]}
+					shadow-mapSize={[1024, 1024]}
 					shadow-camera-left={-5}
 					shadow-camera-right={5}
 					shadow-camera-top={6}
