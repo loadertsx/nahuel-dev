@@ -30,6 +30,10 @@ export function GateExhibit() {
 						className={sceneClass}
 						palette="dark"
 						poster={poster}
+						onUnavailable={() => {
+							setUnavailable(true);
+							setLive(false);
+						}}
 					/>
 				) : (
 					poster
