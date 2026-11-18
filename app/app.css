@@ -15,30 +15,31 @@
   --font-symbols: "Noto Sans Symbols", "Segoe UI Symbol", ui-serif, serif;
 
   /* Light mode colors */
-  --color-bg: #FFFFFF;
-  --color-surface: #F5F5F4;
-  --color-text: #0A0A0A;
-  --color-text-secondary: #5E5E5E;
-  --color-accent: #B5121B;
-  --color-accent-hover: #8F0E15;
-  --color-border: #E7E7E7;
-  --color-border-strong: #CFCFCF;
+  --color-bg: #F8F3E8;
+  --color-surface: #F0E8D8;
+  --color-text: #211A16;
+  --color-text-secondary: #63544B;
+  --color-accent: #9E242A;
+  --color-accent-hover: #78191E;
+  --color-border: #DCD0BF;
+  --color-border-strong: #A89583;
 
-  /* Dark mode colors: the exact negative, the Stone stays red */
-  --color-dark-bg: #0A0A0A;
-  --color-dark-surface: #161616;
-  --color-dark-text: #FAFAFA;
-  --color-dark-text-secondary: #A3A3A3;
-  --color-dark-accent: #E0262F;
-  --color-dark-accent-hover: #F04049;
-  --color-dark-border: #262626;
-  --color-dark-border-strong: #3D3D3D;
+  /* Dark mode colors: dark leather and warm ink */
+  --color-dark-bg: #15110F;
+  --color-dark-surface: #211A17;
+  --color-dark-text: #F3E8D8;
+  --color-dark-text-secondary: #BFB0A2;
+  --color-dark-accent: #FF7876;
+  --color-dark-accent-hover: #FFA29A;
+  --color-dark-border: #382D28;
+  --color-dark-border-strong: #65534A;
 }
 
 /* Semantic aliases that flip with the theme, so components need one class. */
 :root {
   --ink: var(--color-text);
   --paper: var(--color-bg);
+  --surface: var(--color-surface);
   --muted: var(--color-text-secondary);
   --rule: var(--color-border);
   --rule-strong: var(--color-border-strong);
@@ -48,6 +49,7 @@
 .dark {
   --ink: var(--color-dark-text);
   --paper: var(--color-dark-bg);
+  --surface: var(--color-dark-surface);
   --muted: var(--color-dark-text-secondary);
   --rule: var(--color-dark-border);
   --rule-strong: var(--color-dark-border-strong);
@@ -56,15 +58,6 @@
 
 html {
   scroll-behavior: smooth;
-}
-
-/* Prevent font flash - hide content until fonts load */
-html:not(.fonts-loaded) body {
-  opacity: 0;
-}
-
-html.fonts-loaded body {
-  opacity: 1;
 }
 
 html.dark {
@@ -426,7 +419,7 @@ pre[class*="language-"] {
   position: absolute;
   pointer-events: none;
   z-index: -1;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--rule-strong);
 }
 
 .plate::before {
@@ -460,11 +453,283 @@ pre[class*="language-"] {
    hero still fits above the fold on a 13" laptop (≈1440×780). */
 @layer components {
   .display-hero {
-    font-size: clamp(3.4rem, min(6.4vw, 11.5vh), 6.5rem);
+    font-size: clamp(3.1rem, 7vw, 7.5rem);
+    line-height: 0.87;
+    letter-spacing: -0.055em;
   }
   .display-plate {
     font-size: clamp(3.2rem, min(6vw, 11vh), 6rem);
   }
+}
+
+/* The portfolio opens on a dark display case for the Gate of Truth. */
+.home-hero {
+  --hero-ink: #f8ead6;
+  --hero-muted: #d6bfae;
+  --hero-accent: #ff9189;
+  --hero-rule: #786052;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  margin-block: clamp(1.25rem, 3vw, 2.75rem) 0;
+  border: 1px solid var(--hero-rule);
+  background:
+    radial-gradient(ellipse at 85% 28%, #422524 0%, transparent 54%),
+    linear-gradient(130deg, #211916, #120d0d 70%);
+  color: var(--hero-ink);
+}
+
+.home-hero-copy {
+  --ink: var(--hero-ink);
+  --paper: #211916;
+  --muted: var(--hero-muted);
+  --stone: var(--hero-accent);
+  display: grid;
+  justify-items: start;
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  min-width: 0;
+  padding: clamp(1.25rem, 4vw, 4rem);
+}
+
+.home-hero-copy > p:not(.home-role) {
+  color: var(--hero-muted);
+}
+
+.home-hero-copy h1 em {
+  display: block;
+  color: var(--hero-accent);
+}
+
+.home-role {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--hero-accent);
+}
+
+.home-role::before {
+  content: "";
+  width: 1.5rem;
+  height: 1px;
+  background: currentColor;
+  flex: none;
+}
+
+.gate-plate {
+  min-width: 0;
+}
+
+.gate-plate-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  background-image:
+    linear-gradient(0deg, #e7b99714 1px, transparent 1px),
+    linear-gradient(90deg, #e7b99714 1px, transparent 1px);
+  background-position: center;
+  background-size: 2rem 2rem;
+}
+
+.gate-plate-stage::before {
+  content: "";
+  position: absolute;
+  inset: clamp(0.5rem, 2vw, 1.5rem);
+  border: 1px solid #e7b99737;
+  pointer-events: none;
+}
+
+.gate-plate-diagram {
+  position: absolute;
+  width: 74%;
+  height: auto;
+  color: #e7b997;
+  opacity: 0.24;
+  transform: translateY(-4%) rotate(-14deg);
+  pointer-events: none;
+}
+
+.gate-plate-scene {
+  max-width: 34rem;
+}
+
+.gate-plate-scene img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.gate-plate-caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  border-top: 1px solid var(--hero-rule);
+  padding: 0.75rem clamp(0.75rem, 2vw, 1.5rem);
+  background: #1c1414;
+}
+
+.gate-plate-motto {
+  color: var(--hero-muted);
+}
+
+.gate-plate-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  border: 1px solid var(--hero-rule);
+  padding-inline: 0.75rem;
+  color: var(--hero-ink);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.gate-plate-toggle:hover,
+.gate-plate-toggle:focus-visible {
+  border-color: var(--hero-accent);
+  color: var(--hero-accent);
+}
+
+@media (min-width: 1024px) {
+  .home-hero {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  }
+
+  .gate-plate {
+    border-left: 1px solid var(--hero-rule);
+  }
+}
+
+.home-section {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin-block-start: clamp(3rem, 7vw, 6.5rem);
+}
+
+.home-section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.home-section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4.7vw, 4.2rem);
+  line-height: 0.98;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+.home-process {
+  border-top: 1px solid var(--rule-strong);
+  padding-top: clamp(1.5rem, 4vw, 3rem);
+}
+
+.process-step {
+  border: 1px solid var(--rule);
+  background: var(--surface);
+}
+
+.project-illustrated {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+}
+
+.project-illustrated-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.project-illustrated h3 {
+  font-size: clamp(1.55rem, 2.35vw, 2.25rem);
+}
+
+.project-illustration {
+  --seal-ink: #ffb9ab;
+  display: grid;
+  min-height: 8.5rem;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  color: var(--seal-ink);
+  background:
+    radial-gradient(ellipse at center, #9b4b3d70, transparent 68%),
+    repeating-linear-gradient(90deg, #efd4b819 0 1px, transparent 1px 18px),
+    #28191a;
+  perspective: 24rem;
+}
+
+.project-illustrated:nth-child(2) .project-illustration {
+  --seal-ink: #d5d8a8;
+  background-color: #212621;
+  background-image:
+    radial-gradient(ellipse at center, #83895165, transparent 68%),
+    repeating-linear-gradient(45deg, #efd4b819 0 1px, transparent 1px 18px);
+}
+
+.project-illustrated:nth-child(3) .project-illustration {
+  --seal-ink: #ddd0ec;
+  background-color: #24202f;
+  background-image:
+    radial-gradient(ellipse at center, #866ca275, transparent 68%),
+    repeating-linear-gradient(135deg, #efd4b819 0 1px, transparent 1px 18px);
+}
+
+.project-seal {
+  display: grid;
+  width: 4.75rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  outline: 1px solid currentColor;
+  outline-offset: 0.45rem;
+  background: #21191bbd;
+  box-shadow: 0 0 2rem #0007;
+  font-size: 2.15rem;
+  line-height: 1;
+  transform: rotateX(12deg) rotateY(-18deg);
+  transition: transform 240ms ease;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .project-illustrated:hover .project-seal {
+    transform: rotateX(0deg) rotateY(12deg) scale(1.08);
+  }
+}
+
+.home-contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem 1.75rem;
+  margin-top: clamp(3rem, 7vw, 6.5rem);
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.home-contact img {
+  width: 5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid var(--rule-strong);
+  object-fit: cover;
+  filter: grayscale(1);
+}
+
+.home-contact > div:first-of-type {
+  flex: 1 1 15rem;
 }
 
 /* Small caps labels */

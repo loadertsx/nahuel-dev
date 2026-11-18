@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import Footer from "./components/footer";
 import Header from "./components/header";
@@ -31,16 +31,6 @@ export const links = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	const [openMenu, setOpenMenu] = useState(false);
-
-	useEffect(() => {
-		if (document.fonts) {
-			document.fonts.ready.then(() => {
-				document.documentElement.classList.add("fonts-loaded");
-			});
-		} else {
-			document.documentElement.classList.add("fonts-loaded");
-		}
-	}, []);
 
 	return (
 		<html lang="en">
