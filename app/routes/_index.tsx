@@ -1,4 +1,3 @@
-import { Eyebrow } from "~/components/alchemy/ornament";
 import { PlateButton } from "~/components/alchemy/plate-button";
 import { LazyGateScene } from "~/components/gate-scene/lazy-gate-scene";
 
@@ -56,65 +55,54 @@ const STEPS = [
 export default function Index() {
 	return (
 		<>
-			{/* Hero */}
-			<section className="grid xl:grid-cols-[minmax(0,1fr)_auto] items-center gap-10 xl:gap-12 pt-10 md:pt-16 xl:pt-12 pb-16 md:pb-24 xl:pb-24">
-				<figure className="order-first xl:order-last flex flex-col items-center gap-3">
-					<LazyGateScene className="aspect-square w-full max-w-[340px] md:max-w-[460px] xl:w-[min(540px,60vh)] xl:max-w-none" />
-					<figcaption className="italic text-[0.95rem] text-[var(--muted)]">
-						Fig. II — Porta Veritatis
-					</figcaption>
-					<p className="caps text-[0.62rem] tracking-[0.3em] text-[var(--muted)]">
-						One is all · All is one
-					</p>
-				</figure>
-
-				<div className="space-y-7 md:space-y-8">
-					<Eyebrow fig="Fig. I" label="Software Developer" />
-					<h1 className="font-serif font-light display-hero leading-[0.88] tracking-[-0.02em]">
-						Building
-						<br />
-						products with
-						<br />
-						<em className="font-light">intention.</em>
+			<section className="home-hero grid items-center gap-9 py-12 sm:py-16 lg:grid-cols-2 lg:gap-8 xl:gap-12">
+				<div className="space-y-6">
+					<p className="home-role caps text-xs">Software Developer</p>
+					<h1 className="display-hero font-serif font-medium leading-[0.91] tracking-[-0.045em]">
+						Building products with{" "}
+						<em className="font-medium text-[var(--stone)]">intention.</em>
 					</h1>
-					<p className="max-w-[520px] text-[1.125rem] md:text-[1.3rem] leading-[1.5] text-[var(--muted)]">
+					<p className="max-w-[38ch] text-xl leading-relaxed text-[var(--muted)] md:text-2xl">
 						I craft web experiences that feel natural and work beautifully —
 						currently with React, TypeScript and the modern web platform.
 					</p>
-					<div className="flex flex-col sm:flex-row gap-4 sm:gap-5 pt-2">
+					<div className="flex flex-wrap gap-3.5 pt-2 sm:gap-5">
 						<PlateButton to="/projects">View my work</PlateButton>
 						<PlateButton to="/blog" variant="secondary">
 							Read the blog
 						</PlateButton>
 					</div>
-					<p className="font-script text-[1.75rem] text-[var(--muted)]">
-						— solve et coagula
-					</p>
 				</div>
+
+				<figure className="gate-plate">
+					<div className="gate-plate-stage">
+						<LazyGateScene className="relative aspect-square w-full max-w-[485px] text-[var(--ink)]" />
+					</div>
+					<figcaption className="gate-plate-caption">
+						<span className="italic text-lg">Porta Veritatis</span>
+						<span className="caps text-[0.65rem] text-[var(--muted)]">
+							One is all · All is one
+						</span>
+					</figcaption>
+				</figure>
 			</section>
 
-			{/* II · The law of equivalent exchange */}
-			<section className="space-y-10 md:space-y-14 pb-8">
-				<div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-8">
-					<span className="font-serif font-light text-[4.5rem] md:text-[7rem] leading-[0.8]">
-						II
-					</span>
-					<div className="space-y-2.5">
-						<p className="caps text-[0.72rem] text-[var(--muted)]">
-							The law of equivalent exchange
-						</p>
-						<h2 className="font-serif font-medium text-[2rem] md:text-[2.9rem] leading-[1.1] tracking-[-0.01em]">
-							To build something, I first take it apart.
-						</h2>
-					</div>
+			<section className="home-process space-y-7 pb-8 pt-10 md:space-y-10 md:pt-14">
+				<div className="space-y-3">
+					<p className="caps text-xs text-[var(--stone)]">
+						The law of equivalent exchange
+					</p>
+					<h2 className="font-serif font-medium text-[2rem] md:text-[2.9rem] leading-[1.1] tracking-[-0.02em]">
+						To build something, I first take it apart.
+					</h2>
 				</div>
-				<ol className="grid xl:grid-cols-3 gap-9 xl:gap-14">
+				<ol className="grid gap-3 md:grid-cols-3 md:gap-4">
 					{STEPS.map((step) => (
 						<li
 							key={step.title}
-							className="flex flex-col md:flex-row xl:flex-col gap-3.5 md:gap-8 xl:gap-4 pt-6 xl:pt-7 border-t border-[var(--ink)]"
+							className="process-step flex flex-col gap-4 p-5 xl:p-7"
 						>
-							<div className="flex items-center gap-3.5 md:w-[150px] xl:w-auto flex-none">
+							<div className="flex items-center justify-between gap-3.5 text-[var(--stone)]">
 								<svg
 									aria-hidden="true"
 									viewBox="0 0 40 40"
@@ -128,7 +116,7 @@ export default function Index() {
 								<span className="caps text-[0.8rem]">{step.numeral}</span>
 							</div>
 							<div className="space-y-2.5">
-								<h3 className="font-serif font-medium text-[2rem] md:text-[2.2rem] leading-[1.1]">
+								<h3 className="font-serif font-medium text-[1.7rem] xl:text-[2.1rem] leading-[1.1]">
 									{step.title}
 								</h3>
 								<p className="text-[1.08rem] md:text-[1.15rem] leading-[1.5] text-[var(--muted)]">

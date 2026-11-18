@@ -15,30 +15,31 @@
   --font-symbols: "Noto Sans Symbols", "Segoe UI Symbol", ui-serif, serif;
 
   /* Light mode colors */
-  --color-bg: #FFFFFF;
-  --color-surface: #F5F5F4;
-  --color-text: #0A0A0A;
-  --color-text-secondary: #5E5E5E;
-  --color-accent: #B5121B;
-  --color-accent-hover: #8F0E15;
-  --color-border: #E7E7E7;
-  --color-border-strong: #CFCFCF;
+  --color-bg: #F8F3E8;
+  --color-surface: #F0E8D8;
+  --color-text: #211A16;
+  --color-text-secondary: #63544B;
+  --color-accent: #9E242A;
+  --color-accent-hover: #78191E;
+  --color-border: #DCD0BF;
+  --color-border-strong: #A89583;
 
-  /* Dark mode colors: the exact negative, the Stone stays red */
-  --color-dark-bg: #0A0A0A;
-  --color-dark-surface: #161616;
-  --color-dark-text: #FAFAFA;
-  --color-dark-text-secondary: #A3A3A3;
-  --color-dark-accent: #E0262F;
-  --color-dark-accent-hover: #F04049;
-  --color-dark-border: #262626;
-  --color-dark-border-strong: #3D3D3D;
+  /* Dark mode colors: dark leather and warm ink */
+  --color-dark-bg: #15110F;
+  --color-dark-surface: #211A17;
+  --color-dark-text: #F3E8D8;
+  --color-dark-text-secondary: #BFB0A2;
+  --color-dark-accent: #FF7876;
+  --color-dark-accent-hover: #FFA29A;
+  --color-dark-border: #382D28;
+  --color-dark-border-strong: #65534A;
 }
 
 /* Semantic aliases that flip with the theme, so components need one class. */
 :root {
   --ink: var(--color-text);
   --paper: var(--color-bg);
+  --surface: var(--color-surface);
   --muted: var(--color-text-secondary);
   --rule: var(--color-border);
   --rule-strong: var(--color-border-strong);
@@ -48,6 +49,7 @@
 .dark {
   --ink: var(--color-dark-text);
   --paper: var(--color-dark-bg);
+  --surface: var(--color-dark-surface);
   --muted: var(--color-dark-text-secondary);
   --rule: var(--color-dark-border);
   --rule-strong: var(--color-dark-border-strong);
@@ -56,15 +58,6 @@
 
 html {
   scroll-behavior: smooth;
-}
-
-/* Prevent font flash - hide content until fonts load */
-html:not(.fonts-loaded) body {
-  opacity: 0;
-}
-
-html.fonts-loaded body {
-  opacity: 1;
 }
 
 html.dark {
@@ -426,7 +419,7 @@ pre[class*="language-"] {
   position: absolute;
   pointer-events: none;
   z-index: -1;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--rule-strong);
 }
 
 .plate::before {
@@ -460,11 +453,73 @@ pre[class*="language-"] {
    hero still fits above the fold on a 13" laptop (≈1440×780). */
 @layer components {
   .display-hero {
-    font-size: clamp(3.4rem, min(6.4vw, 11.5vh), 6.5rem);
+    font-size: clamp(3rem, 6.15vw, 6.6rem);
+    text-wrap: balance;
   }
   .display-plate {
     font-size: clamp(3.2rem, min(6vw, 11vh), 6rem);
   }
+}
+
+/* The Gate is mounted like an illustration within the manuscript. */
+.home-role {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--stone);
+}
+
+.home-role::before {
+  content: "";
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+}
+
+.gate-plate {
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+}
+
+.gate-plate-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: clamp(0.5rem, 2vw, 1.5rem);
+  background:
+    radial-gradient(ellipse at center, color-mix(in srgb, var(--stone) 11%, transparent), transparent 68%),
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: auto, 2rem 2rem, 2rem 2rem;
+  background-position: center;
+}
+
+.gate-plate-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0.5rem;
+  border: 1px solid var(--rule);
+  pointer-events: none;
+}
+
+.gate-plate-caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  border-top: 1px solid var(--rule-strong);
+  padding: 0.55rem 1rem;
+  background: var(--paper);
+}
+
+.home-process {
+  border-top: 1px solid var(--rule-strong);
+}
+
+.process-step {
+  border: 1px solid var(--rule);
+  background: var(--surface);
 }
 
 /* Small caps labels */

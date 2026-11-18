@@ -21,16 +21,19 @@ export default function CardProject({
 	index?: number;
 }) {
 	return (
-		<article className="relative flex flex-col gap-[18px] border border-[var(--ink)] bg-[var(--paper)] px-6 py-[26px] md:px-9 md:py-8">
+		<article className="relative flex flex-col gap-[18px] border border-[var(--rule-strong)] bg-[var(--surface)] px-6 py-[26px] md:px-9 md:py-8">
 			<span
 				aria-hidden="true"
-				className="pointer-events-none absolute inset-1.5 border border-[var(--ink)] opacity-45"
+				className="pointer-events-none absolute inset-1.5 border border-[var(--rule)]"
 			/>
 			<div className="flex items-center justify-between">
 				<span className="caps text-[0.72rem] text-[var(--muted)]">
 					No. {toRoman(index + 1)}
 				</span>
-				<span aria-hidden="true" className="font-symbols text-2xl leading-none">
+				<span
+					aria-hidden="true"
+					className="font-symbols text-2xl leading-none text-[var(--stone)]"
+				>
 					{GLYPHS[index % GLYPHS.length]}
 				</span>
 			</div>
