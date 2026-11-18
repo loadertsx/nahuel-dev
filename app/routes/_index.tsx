@@ -55,7 +55,7 @@ const STEPS = [
 export default function Index() {
 	return (
 		<>
-			<section className="home-hero grid items-center gap-9 py-12 sm:py-16 lg:grid-cols-2 lg:gap-8 xl:gap-12">
+			<section className="grid grid-cols-1 items-center gap-9 py-12 sm:py-16 lg:grid-cols-2 lg:gap-8 xl:gap-12">
 				<div className="space-y-6">
 					<p className="home-role caps text-xs">Software Developer</p>
 					<h1 className="display-hero font-serif font-medium leading-[0.91] tracking-[-0.045em]">
@@ -76,7 +76,7 @@ export default function Index() {
 
 				<figure className="gate-plate">
 					<div className="gate-plate-stage">
-						<LazyGateScene className="relative aspect-square w-full max-w-[485px] text-[var(--ink)]" />
+						<LazyGateScene className="relative aspect-square w-full min-w-0 max-w-[485px] text-[var(--ink)]" />
 					</div>
 					<figcaption className="gate-plate-caption">
 						<span className="italic text-lg">Porta Veritatis</span>
