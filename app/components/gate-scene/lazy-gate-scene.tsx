@@ -22,13 +22,17 @@ const GateScene = import.meta.env.SSR
  * would reach the route boundary and take the whole page down.
  */
 class SceneBoundary extends Component<
-	{ fallback: ReactNode; children: ReactNode },
+	{ fallback: ReactNode; children: ReactNode; onUnavailable?: () => void },
 	{ failed: boolean }
 > {
 	state = { failed: false };
 
 	static getDerivedStateFromError() {
 		return { failed: true };
+	}
+
+	componentDidCatch() {
+		this.props.onUnavailable?.();
 	}
 
 	render() {
@@ -44,23 +48,29 @@ class SceneBoundary extends Component<
 export function LazyGateScene({
 	className,
 	orbit,
+	palette,
+	poster,
+	onUnavailable,
 }: {
 	className?: string;
 	orbit?: number;
+	palette?: "light" | "dark";
+	poster?: ReactNode;
+	onUnavailable?: () => void;
 }) {
 	const [mounted, setMounted] = useState(false);
 	useEffect(() => setMounted(true), []);
 
-	const fallback = (
+	const fallback = poster ?? (
 		<div className={className}>
 			<TransmutationCircle className="size-full p-[8%]" />
 		</div>
 	);
 	if (!mounted || !GateScene) return fallback;
 	return (
-		<SceneBoundary fallback={fallback}>
+		<SceneBoundary fallback={fallback} onUnavailable={onUnavailable}>
 			<Suspense fallback={fallback}>
-				<GateScene className={className} orbit={orbit} />
+				<GateScene className={className} orbit={orbit} palette={palette} />
 			</Suspense>
 		</SceneBoundary>
 	);

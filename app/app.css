@@ -453,32 +453,70 @@ pre[class*="language-"] {
    hero still fits above the fold on a 13" laptop (≈1440×780). */
 @layer components {
   .display-hero {
-    font-size: clamp(3rem, 6.15vw, 6.6rem);
-    text-wrap: balance;
+    font-size: clamp(3.1rem, 7vw, 7.5rem);
+    line-height: 0.87;
+    letter-spacing: -0.055em;
   }
   .display-plate {
     font-size: clamp(3.2rem, min(6vw, 11vh), 6rem);
   }
 }
 
-/* The Gate is mounted like an illustration within the manuscript. */
+/* The portfolio opens on a dark display case for the Gate of Truth. */
+.home-hero {
+  --hero-ink: #f8ead6;
+  --hero-muted: #d6bfae;
+  --hero-accent: #ff9189;
+  --hero-rule: #786052;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  margin-block: clamp(1.25rem, 3vw, 2.75rem) 0;
+  border: 1px solid var(--hero-rule);
+  background:
+    radial-gradient(ellipse at 85% 28%, #422524 0%, transparent 54%),
+    linear-gradient(130deg, #211916, #120d0d 70%);
+  color: var(--hero-ink);
+}
+
+.home-hero-copy {
+  --ink: var(--hero-ink);
+  --paper: #211916;
+  --muted: var(--hero-muted);
+  --stone: var(--hero-accent);
+  display: grid;
+  justify-items: start;
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  min-width: 0;
+  padding: clamp(1.25rem, 4vw, 4rem);
+}
+
+.home-hero-copy > p:not(.home-role) {
+  color: var(--hero-muted);
+}
+
+.home-hero-copy h1 em {
+  display: block;
+  color: var(--hero-accent);
+}
+
 .home-role {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  color: var(--stone);
+  gap: 0.65rem;
+  color: var(--hero-accent);
 }
 
 .home-role::before {
   content: "";
-  width: 1.75rem;
+  width: 1.5rem;
   height: 1px;
   background: currentColor;
+  flex: none;
 }
 
 .gate-plate {
-  border: 1px solid var(--rule-strong);
-  background: var(--surface);
+  min-width: 0;
 }
 
 .gate-plate-stage {
@@ -486,41 +524,212 @@ pre[class*="language-"] {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   place-items: center;
-  padding: clamp(0.5rem, 2vw, 1.5rem);
-  background:
-    radial-gradient(ellipse at center, color-mix(in srgb, var(--stone) 11%, transparent), transparent 68%),
-    linear-gradient(var(--rule) 1px, transparent 1px),
-    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
-  background-size: auto, 2rem 2rem, 2rem 2rem;
+  background-image:
+    linear-gradient(0deg, #e7b99714 1px, transparent 1px),
+    linear-gradient(90deg, #e7b99714 1px, transparent 1px);
   background-position: center;
+  background-size: 2rem 2rem;
 }
 
 .gate-plate-stage::before {
   content: "";
   position: absolute;
-  inset: 0.5rem;
-  border: 1px solid var(--rule);
+  inset: clamp(0.5rem, 2vw, 1.5rem);
+  border: 1px solid #e7b99737;
   pointer-events: none;
+}
+
+.gate-plate-diagram {
+  position: absolute;
+  width: 74%;
+  height: auto;
+  color: #e7b997;
+  opacity: 0.24;
+  transform: translateY(-4%) rotate(-14deg);
+  pointer-events: none;
+}
+
+.gate-plate-scene {
+  max-width: 34rem;
+}
+
+.gate-plate-scene img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .gate-plate-caption {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: 0.25rem 1rem;
-  border-top: 1px solid var(--rule-strong);
-  padding: 0.55rem 1rem;
-  background: var(--paper);
+  gap: 0.75rem 1rem;
+  border-top: 1px solid var(--hero-rule);
+  padding: 0.75rem clamp(0.75rem, 2vw, 1.5rem);
+  background: #1c1414;
+}
+
+.gate-plate-motto {
+  color: var(--hero-muted);
+}
+
+.gate-plate-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  border: 1px solid var(--hero-rule);
+  padding-inline: 0.75rem;
+  color: var(--hero-ink);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.gate-plate-toggle:hover,
+.gate-plate-toggle:focus-visible {
+  border-color: var(--hero-accent);
+  color: var(--hero-accent);
+}
+
+@media (min-width: 1024px) {
+  .home-hero {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  }
+
+  .gate-plate {
+    border-left: 1px solid var(--hero-rule);
+  }
+}
+
+.home-section {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin-block-start: clamp(3rem, 7vw, 6.5rem);
+}
+
+.home-section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.home-section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4.7vw, 4.2rem);
+  line-height: 0.98;
+  font-weight: 500;
+  letter-spacing: -0.035em;
 }
 
 .home-process {
   border-top: 1px solid var(--rule-strong);
+  padding-top: clamp(1.5rem, 4vw, 3rem);
 }
 
 .process-step {
   border: 1px solid var(--rule);
   background: var(--surface);
+}
+
+.project-illustrated {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+}
+
+.project-illustrated-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.project-illustrated h3 {
+  font-size: clamp(1.55rem, 2.35vw, 2.25rem);
+}
+
+.project-illustration {
+  --seal-ink: #ffb9ab;
+  display: grid;
+  min-height: 8.5rem;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  color: var(--seal-ink);
+  background:
+    radial-gradient(ellipse at center, #9b4b3d70, transparent 68%),
+    repeating-linear-gradient(90deg, #efd4b819 0 1px, transparent 1px 18px),
+    #28191a;
+  perspective: 24rem;
+}
+
+.project-illustrated:nth-child(2) .project-illustration {
+  --seal-ink: #d5d8a8;
+  background-color: #212621;
+  background-image:
+    radial-gradient(ellipse at center, #83895165, transparent 68%),
+    repeating-linear-gradient(45deg, #efd4b819 0 1px, transparent 1px 18px);
+}
+
+.project-illustrated:nth-child(3) .project-illustration {
+  --seal-ink: #ddd0ec;
+  background-color: #24202f;
+  background-image:
+    radial-gradient(ellipse at center, #866ca275, transparent 68%),
+    repeating-linear-gradient(135deg, #efd4b819 0 1px, transparent 1px 18px);
+}
+
+.project-seal {
+  display: grid;
+  width: 4.75rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  outline: 1px solid currentColor;
+  outline-offset: 0.45rem;
+  background: #21191bbd;
+  box-shadow: 0 0 2rem #0007;
+  font-size: 2.15rem;
+  line-height: 1;
+  transform: rotateX(12deg) rotateY(-18deg);
+  transition: transform 240ms ease;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .project-illustrated:hover .project-seal {
+    transform: rotateX(0deg) rotateY(12deg) scale(1.08);
+  }
+}
+
+.home-contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem 1.75rem;
+  margin-top: clamp(3rem, 7vw, 6.5rem);
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.home-contact img {
+  width: 5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid var(--rule-strong);
+  object-fit: cover;
+  filter: grayscale(1);
+}
+
+.home-contact > div:first-of-type {
+  flex: 1 1 15rem;
 }
 
 /* Small caps labels */

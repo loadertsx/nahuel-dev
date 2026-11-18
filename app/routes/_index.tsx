@@ -1,7 +1,9 @@
 import { PlateButton } from "~/components/alchemy/plate-button";
-import { LazyGateScene } from "~/components/gate-scene/lazy-gate-scene";
-
+import { SigilLink } from "~/components/alchemy/sigil-link";
+import { GateExhibit } from "~/components/gate-scene/gate-exhibit";
+import { projects } from "~/content/projects";
 import type { Route } from "./+types/_index";
+import CardProject from "./projects/components/card-project";
 
 export const handle = { plate: "Plate I · Opus Magnum" };
 
@@ -55,44 +57,55 @@ const STEPS = [
 export default function Index() {
 	return (
 		<>
-			<section className="grid grid-cols-1 items-center gap-9 py-12 sm:py-16 lg:grid-cols-2 lg:gap-8 xl:gap-12">
-				<div className="space-y-6">
-					<p className="home-role caps text-xs">Software Developer</p>
-					<h1 className="display-hero font-serif font-medium leading-[0.91] tracking-[-0.045em]">
-						Building products with{" "}
-						<em className="font-medium text-[var(--stone)]">intention.</em>
+			<section className="home-hero">
+				<div className="home-hero-copy">
+					<p className="home-role caps text-xs">Loader · Software Developer</p>
+					<h1 className="display-hero font-serif font-medium">
+						Building for <em>the web.</em>
 					</h1>
-					<p className="max-w-[38ch] text-xl leading-relaxed text-[var(--muted)] md:text-2xl">
-						I craft web experiences that feel natural and work beautifully —
-						currently with React, TypeScript and the modern web platform.
+					<p className="max-w-[36ch] text-xl leading-relaxed md:text-2xl">
+						I build thoughtful software with React and TypeScript, and write
+						about what I learn along the way.
 					</p>
-					<div className="flex flex-wrap gap-3.5 pt-2 sm:gap-5">
+					<div className="flex flex-wrap items-center gap-5 pt-1">
 						<PlateButton to="/projects">View my work</PlateButton>
-						<PlateButton to="/blog" variant="secondary">
-							Read the blog
-						</PlateButton>
+						<SigilLink to="/blog">Read the blog</SigilLink>
 					</div>
 				</div>
-
-				<figure className="gate-plate">
-					<div className="gate-plate-stage">
-						<LazyGateScene className="relative aspect-square w-full min-w-0 max-w-[485px] text-[var(--ink)]" />
-					</div>
-					<figcaption className="gate-plate-caption">
-						<span className="italic text-lg">Porta Veritatis</span>
-						<span className="caps text-[0.65rem] text-[var(--muted)]">
-							One is all · All is one
-						</span>
-					</figcaption>
-				</figure>
+				<GateExhibit />
 			</section>
 
-			<section className="home-process space-y-7 pb-8 pt-10 md:space-y-10 md:pt-14">
+			<section aria-labelledby="selected-work" className="home-section">
+				<header className="home-section-heading">
+					<div className="space-y-2">
+						<p className="caps text-xs text-[var(--stone)]">Selected Work</p>
+						<h2 id="selected-work" className="home-section-title">
+							Transmutations.
+						</h2>
+					</div>
+					<SigilLink to="/projects">All projects</SigilLink>
+				</header>
+				<div className="grid gap-4 md:grid-cols-3">
+					{projects.slice(0, 3).map((project, index) => (
+						<CardProject
+							key={project.title}
+							{...project}
+							index={index}
+							illustrated
+						/>
+					))}
+				</div>
+			</section>
+
+			<section
+				aria-labelledby="equivalent-exchange"
+				className="home-section home-process"
+			>
 				<div className="space-y-3">
 					<p className="caps text-xs text-[var(--stone)]">
 						The law of equivalent exchange
 					</p>
-					<h2 className="font-serif font-medium text-[2rem] md:text-[2.9rem] leading-[1.1] tracking-[-0.02em]">
+					<h2 id="equivalent-exchange" className="home-section-title">
 						To build something, I first take it apart.
 					</h2>
 				</div>
@@ -126,6 +139,29 @@ export default function Index() {
 						</li>
 					))}
 				</ol>
+			</section>
+
+			<section aria-labelledby="correspondence" className="home-contact">
+				<img
+					src="/me.png"
+					alt="Loader"
+					width={112}
+					height={112}
+					loading="lazy"
+				/>
+				<div className="space-y-2">
+					<p className="caps text-xs text-[var(--stone)]">Correspondence</p>
+					<h2 id="correspondence" className="home-section-title">
+						Let’s work together.
+					</h2>
+					<p className="text-xl text-[var(--muted)]">
+						Have a project in mind? I’d love to hear what you’re working on.
+					</p>
+				</div>
+				<div className="flex flex-wrap items-center gap-5">
+					<PlateButton to="/contact">Get in touch</PlateButton>
+					<SigilLink to="/about">About me</SigilLink>
+				</div>
 			</section>
 		</>
 	);
